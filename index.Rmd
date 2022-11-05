@@ -1,6 +1,6 @@
 --- 
 title: "NCAA Mens Basketball"
-author: "Samuel Fields"
+author: "Samuel Fields, Rohan Poddar"
 date: "`r Sys.Date()`"
 site: bookdown::bookdown_site
 ---
