@@ -1,1 +1,100 @@
 # Results
+
+```{r setup, include=FALSE}
+# this prevents package loading message from appearing in the rendered version of your problem set
+knitr::opts_chunk$set(warning = FALSE, message = FALSE)
+
+library(ggplot2)
+library(dplyr)
+library(tidyverse)
+library(plotly) 
+library(ggridges)
+library(gridExtra)
+library(plotly)
+library(naniar)
+player_stats <- read.csv(file = 'data/NCAA_Player_D1_Stats.csv')
+
+```
+
+
+```{r}
+p1 <- 
+  plot_ly(player_stats, x = ~MPG, y = ~RPG, color=~Cl, text = ~paste("Player Name: ", Player))%>%
+        layout(xaxis = list(title = 'Minutes Per Game'), 
+         yaxis = list(title = 'Rebounds Per Game'), title = 'Average Defensive Statistics by Player Class Level')
+p2 <- 
+  plot_ly(player_stats, x = ~MPG, color=~Cl, text = ~paste("Player Name: ", Player))%>%
+  add_markers(y = ~STPG, showlegend = F)%>%
+        layout(xaxis = list(title = 'Minutes Per Game'), 
+         yaxis = list(title = 'Steals Per Game'))
+p3 <- 
+  plot_ly(player_stats, x = ~MPG, color=~Cl, text = ~paste("Player Name: ", Player))%>%
+  add_markers(y = ~BKPG, showlegend = F)%>%
+        layout(xaxis = list(title = 'Minutes Per Game'), 
+         yaxis = list(title = 'Blocks Per Game'))
+
+subplot(p1, p2, p3, nrows=2, titleY=TRUE, titleX=TRUE,shareX = TRUE, margin = 0.04)
+```
+
+```{r}
+p1 <- 
+  plot_ly(player_stats, x = ~MPG, y = ~RPG, color=~Pos, text = ~paste("Player Name: ", Player))%>%
+        layout(xaxis = list(title = 'Minutes Per Game'), 
+         yaxis = list(title = 'Rebounds Per Game'), title = 'Average Defensive Statistics by Player Position')
+p2 <- 
+  plot_ly(player_stats, x = ~MPG, color=~Pos, text = ~paste("Player Name: ", Player))%>%
+  add_markers(y = ~STPG, showlegend = F)%>%
+        layout(xaxis = list(title = 'Minutes Per Game'), 
+         yaxis = list(title = 'Steals Per Game'))
+p3 <- 
+  plot_ly(player_stats, x = ~MPG, color=~Pos, text = ~paste("Player Name: ", Player))%>%
+  add_markers(y = ~BKPG, showlegend = F)%>%
+        layout(xaxis = list(title = 'Minutes Per Game'), 
+         yaxis = list(title = 'Blocks Per Game'))
+
+subplot(p1, p2, p3, nrows=2, titleY=TRUE, titleX=TRUE,shareX = TRUE, margin = 0.04)
+```
+
+
+```{r}
+p <- 
+  player_stats %>%
+  ggplot(aes(reorder(Cl, -RPG, FUN=median, na.rm=TRUE), RPG)) + 
+  geom_boxplot(na.rm = TRUE) + theme(axis.text.x = element_text(angle = 45, vjust = 0.5, hjust=1))
+ggplotly(p)
+```
+
+```{r}
+p1 <- 
+  player_stats %>% drop_na(RPG) %>%
+  ggplot(aes(reorder(Pos, -RPG, FUN=median, na.rm=TRUE), RPG)) + 
+  geom_boxplot(na.rm = TRUE) + theme(axis.text.x = element_text(angle = 45, vjust = 0.5, hjust=1))
+
+p2 <- 
+  player_stats %>% drop_na(RPG) %>%
+  ggplot(aes(reorder(Pos, -RPG, FUN=median, na.rm=TRUE), STPG)) + 
+  geom_boxplot(na.rm = TRUE) + theme(axis.text.x = element_text(angle = 45, vjust = 0.5, hjust=1))
+
+p3 <- 
+  player_stats %>% drop_na(RPG) %>%
+  ggplot(aes(reorder(Pos, -RPG, FUN=median, na.rm=TRUE), BKPG)) + 
+  geom_boxplot(na.rm = TRUE) + theme(axis.text.x = element_text(angle = 45, vjust = 0.5, hjust=1))
+
+grid.arrange(p1, p2, p3, ncol=3)
+```
+
+```{r}
+p1 <- player_stats %>% drop_na(REB) %>% ggplot(aes(x = REB, y = Pos)) + geom_density_ridges2()
+p2 <- player_stats %>% drop_na(REB) %>% ggplot(aes(x = ST, y = Pos)) + geom_density_ridges2()
+p3 <- player_stats %>% drop_na(BLKS) %>% ggplot(aes(x = BLKS, y = Pos)) + geom_density_ridges2()
+grid.arrange(p1, p2, p3, nrow=3)
+```
+
+
+
+
+```{r}
+p <- ggplot(player_stats, aes(reorder(Division, -ST, FUN=median, na.rm=TRUE), ST)) + 
+  geom_boxplot(na.rm = TRUE) + theme(axis.text.x = element_text(angle = 45, vjust = 0.5, hjust=1))
+ggplotly(p)
+```

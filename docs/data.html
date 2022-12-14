@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Chapter 3 Data | NCAA Mens Basketball</title>
   <meta name="description" content="Chapter 3 Data | NCAA Mens Basketball" />
-  <meta name="generator" content="bookdown 0.29 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.31 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Chapter 3 Data | NCAA Mens Basketball" />
   <meta property="og:type" content="book" />
@@ -23,7 +23,7 @@
 <meta name="author" content="Samuel Fields, Rohan Poddar" />
 
 
-<meta name="date" content="2022-11-05" />
+<meta name="date" content="2022-12-14" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -110,12 +110,20 @@
 <h1><span class="header-section-number">Chapter 3</span> Data<a href="data.html#data" class="anchor-section" aria-label="Anchor link to header"></a></h1>
 <div id="sources" class="section level2 hasAnchor" number="3.1">
 <h2><span class="header-section-number">3.1</span> Sources<a href="data.html#sources" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Our data was sourced from the NCAA Statistics National Ranking website (<a href="https://stats.ncaa.org/rankings" class="uri">https://stats.ncaa.org/rankings</a>). This website provides public access to statistics across a variety of NCAA sports and divisions. For our project, we focused on the statistics provided on individual players and teams belonging to the NCAA Division I Men’s basketball conference. The NCAA Statistics website provides a user interface that allows the user to select a statistic of interest, and then download the top ranked number of entities belonging to that selected list. For team statistics, every team was included for every statistic selected. However, for players each statistic was limited to the top 350 players belonging to a specific statistical ranking.</p>
+<p>For player statistics, in addition to the player statistic of interest, each top 350 player statistics list included columns on the player’s name (which also included information about their school’s regional conference), their class level (freshman, sophomore, etc), their height, their basketball position (Guard, Forward, or Center), and the number of games they played. The player statistics we collected from the website were 3-Point Field Goal Attempts, Assist Turnover Ratio, Assists per Game, Blocked Shots per Game, Defensive Rebounds per Game, Double Doubles, Field-Goal Percentage, Free-Throw Attempts, Free-Throws Made, Free-Throw Percentage, Minutes per Game, Offensive Rebounds per Game, Points per Game, Rebounds per Game, Steals per Game, Three-Point Field Goals per Game, Three-Point Field Goal Percentage, Total 3-Point Field Goals Made, Total Assists, Total Blocks, Total Field Goal Attempts, Total Field Goals Made, Total Minutes, Total Points, Total Rebounds, Total Steals, and Total Triple Doubles. In total, 27 player statistic lists were collected.</p>
 </div>
 <div id="cleaning-transformation" class="section level2 hasAnchor" number="3.2">
 <h2><span class="header-section-number">3.2</span> Cleaning / transformation<a href="data.html#cleaning-transformation" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>For the player statistics, no cleaning was needed. However, the 27 lists were combined into 1 aggregate dataset by merging each list of the individual player information (player name, height, class level, position, and games played). Following this aggregation, another player feature, the player’s team’s regional division, was mined and added as a feature in the dataset.</p>
 </div>
 <div id="missing-value-analysis" class="section level2 hasAnchor" number="3.3">
 <h2><span class="header-section-number">3.3</span> Missing value analysis<a href="data.html#missing-value-analysis" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>We will first perform an analysis of the values missing from the individual player statistics dataset.</p>
+<p><img src="finalproj_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<p>We can observe from the plot above that the only complete features in this data set are the Player’s name (Player), their class level (Cl), their height (Ht), the basketball position (Pos), the number of games played (G), and their school’s divisional conference (Division). Beyond this, we can then observe that the remaining data features are each, roughly, 76% missing. From this observation, we can infer that the top 350 individual players from each statistical list we pulled are mostly mutually exclusive. The majority of students do not rank in the top 350 players across more than one top 350 statistical list ranking that we collected. We can see this broken down in the following visualization.</p>
+<p><img src="finalproj_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<p>The visualization above depicts the count of the top 40 most frequent intersecting missing value features, with a max intersection of at most 10 missing features. These numbers were chosen for visualization quality. On the far left, we can observe that the most frequent intersection of missing values (with a max intersection of at most 10 features) is samples with both Free Throw Attempts (FTA), Free Throws Made (FT), Minutes Played (MP), Field Goals Attempted (FGA), Minutes Per Game(MPG), Turn Overs (TO), Assist to Turnover Ration (Ratio), Field Goals Made (FG), 3 Point Field Goal Percentage (X3FG), and Number of Triple Doubles (Trpl.Dbl). This set of intersecting missing values accounted for 635 samples with missing values. We can then observe a steep drop off for the rest of the intersecting missing value sets, but there is a persistent trend that the large majority of samples that contain a missing value contain a missing value across more than one, and even two, data features. This supports the hypothesis that the large majority of individual players do rank in top 350 players for multiple top 350 player statistic lists.</p>
 
 </div>
 </div>
