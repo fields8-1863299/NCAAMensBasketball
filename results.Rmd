@@ -13,7 +13,7 @@ library(gridExtra)
 library(plotly)
 library(naniar)
 player_stats <- read.csv(file = 'data/NCAA_Player_D1_Stats.csv')
-
+team_stats <- read.csv(file = "data/NCAA_Team_D1_Stats.csv")
 ```
 
 
@@ -55,38 +55,135 @@ p3 <-
 subplot(p1, p2, p3, nrows=2, titleY=TRUE, titleX=TRUE,shareX = TRUE, margin = 0.04)
 ```
 
+```{r}
+team_stats$win_loss_ratio <- team_stats$W / team_stats$L
+team_stats$G <- team_stats$W + team_stats$L
+team_stats$win_ratio <- team_stats$W / team_stats$G
+
+
+team_stats$RPG <- as.numeric(team_stats$REB) / team_stats$G
+team_stats$STPG <- team_stats$ST / team_stats$G
+team_stats$BKPG <- team_stats$BLKS / team_stats$G
+team_stats$FPG <- team_stats$Fouls / team_stats$G
+```
+
 
 ```{r}
-p <- 
-  player_stats %>%
-  ggplot(aes(reorder(Cl, -RPG, FUN=median, na.rm=TRUE), RPG)) + 
-  geom_boxplot(na.rm = TRUE) + theme(axis.text.x = element_text(angle = 45, vjust = 0.5, hjust=1))
-ggplotly(p)
+p1 <- team_stats %>% drop_na(STPG)  %>% drop_na(FPG) %>% drop_na(win_ratio) %>%
+  plot_ly(x = ~FPG, y = ~STPG, color = ~win_ratio, colors='PRGn', text = ~paste("Team Name: ", Team))%>%
+        layout(xaxis = list(title = 'Fouls per Game'), 
+         yaxis = list(title = 'Steals Per Game'), title = 'Team Defensive Effiency by Win Ratio')
+
+p1
+```
+
+```{r}
+p2 <- team_stats %>% drop_na(BKPG)  %>% drop_na(FPG) %>% drop_na(win_ratio) %>%
+  plot_ly(x = ~FPG, color = ~win_ratio, colors='PRGn', text = ~paste("Team Name: ", Team))%>%
+        add_markers(y = ~BKPG, showlegend = F, showscale=F)%>%
+        layout(xaxis = list(title = 'Fouls per Game'), 
+         yaxis = list(title = 'Blocks Per Game'))
+
+p2
+
+```
+
+```{r}
+
+p2 <- 
+  ggplot(team_stats, aes(x = win_ratio, y = STPG)) +
+    geom_bin2d() +
+    labs(
+       x = "Win Ratio",
+       y = "Steals per Game")
+
+p2 <- ggplotly(p2)
+p3 <- 
+  ggplot(team_stats, aes(x = win_ratio, y = BKPG)) +
+    geom_bin2d() +
+    labs(
+       x = "Win Ratio",
+       y = "Blocks per Game")
+
+p3 <- ggplotly(p3)
+
+subplot(p2, p3, nrows=2, titleY=TRUE, titleX=TRUE,shareX = TRUE, margin = 0.04)
+```
+
+To preface this analysis, we will first define a "good" Win Ratio (total wins divided by total games) as being greater than 0.5, as this suggests that the team had more wins than losses. First starting our analysis with the Blocks per Game vs Win Ratio and the Steals per Game vs Win Ratio graphs, we can observe that the teams that had a "good" Win Ratio also had, on average, a higher Steals per Game and Blocks per Game statistic than the "bad" Win Ratio teams. However, from the other observation that this is not an absolute feature of the data (from example, some teams with less Steals per Game had a better Win Ratio than some teams with a higher number of Steals per Game), what we might conclude is that some teams place a large focus on defense as part of their overall basketball game strategy, reflected in the outliers on the top each graph for Blocks per Game and Steals per Game, and that these teams with that particular focus are, for the most part, able to find success with a "good" Win Ratio. However, seeing how the majority of teams with a "good" Win Ratio are not these "outlier" defensive teams, we can also conclude that a strong defensive strategy is not essential for a successful basketball team.
+
+```{r}
+p1 <- 
+  player_stats %>% drop_na(RPG) %>% mutate(gene = fct_relevel(Cl, 
+                            "Fr.", "So.", "Jr.", "Sr.")) %>% 
+  ggplot(aes(Cl, RPG)) + 
+  geom_boxplot(na.rm = TRUE) + theme(axis.text.x = element_text(angle = 45, vjust = 0.5, hjust=0.5))+
+    labs(
+       x = "Player Class",
+       y = "Rebounds per Game")
+
+p2 <- 
+  player_stats %>% drop_na(RPG) %>% mutate(gene = fct_relevel(Cl, 
+                            "Fr.", "So.", "Jr.", "Sr.")) %>% 
+  ggplot(aes(Cl, STPG)) + 
+  geom_boxplot(na.rm = TRUE) + theme(axis.text.x = element_text(angle = 45, vjust = 0.5, hjust=0.5))+
+    labs(
+       x = "Player Class",
+       y = "Steals per Game")
+
+p3 <- 
+  player_stats %>% drop_na(RPG) %>% mutate(gene = fct_relevel(Cl, 
+                            "Fr.", "So.", "Jr.", "Sr.")) %>% 
+  ggplot(aes(Cl, BKPG)) + 
+  geom_boxplot(na.rm = TRUE) + theme(axis.text.x = element_text(angle = 45, vjust = 0.5, hjust=0.5))+
+    labs(
+       x = "Player Class",
+       y = "Blocks per Game")
+
+grid.arrange(p1, p2, p3, ncol=3)
 ```
 
 ```{r}
 p1 <- 
   player_stats %>% drop_na(RPG) %>%
   ggplot(aes(reorder(Pos, -RPG, FUN=median, na.rm=TRUE), RPG)) + 
-  geom_boxplot(na.rm = TRUE) + theme(axis.text.x = element_text(angle = 45, vjust = 0.5, hjust=1))
+  geom_boxplot(na.rm = TRUE) + theme(axis.text.x = element_text(angle = 45, vjust = 0.5, hjust=1))+
+    labs(
+       x = "Player Position",
+       y = "Rebounds Position")
 
 p2 <- 
   player_stats %>% drop_na(RPG) %>%
   ggplot(aes(reorder(Pos, -RPG, FUN=median, na.rm=TRUE), STPG)) + 
-  geom_boxplot(na.rm = TRUE) + theme(axis.text.x = element_text(angle = 45, vjust = 0.5, hjust=1))
+  geom_boxplot(na.rm = TRUE) + theme(axis.text.x = element_text(angle = 45, vjust = 0.5, hjust=1))+
+    labs(
+       x = "Player Position",
+       y = "Steals Position")
 
 p3 <- 
   player_stats %>% drop_na(RPG) %>%
   ggplot(aes(reorder(Pos, -RPG, FUN=median, na.rm=TRUE), BKPG)) + 
-  geom_boxplot(na.rm = TRUE) + theme(axis.text.x = element_text(angle = 45, vjust = 0.5, hjust=1))
+  geom_boxplot(na.rm = TRUE) + theme(axis.text.x = element_text(angle = 45, vjust = 0.5, hjust=1))+
+    labs(
+       x = "Player Position",
+       y = "Blocks Position")
 
 grid.arrange(p1, p2, p3, ncol=3)
 ```
 
 ```{r}
-p1 <- player_stats %>% drop_na(REB) %>% ggplot(aes(x = REB, y = Pos)) + geom_density_ridges2()
-p2 <- player_stats %>% drop_na(REB) %>% ggplot(aes(x = ST, y = Pos)) + geom_density_ridges2()
-p3 <- player_stats %>% drop_na(BLKS) %>% ggplot(aes(x = BLKS, y = Pos)) + geom_density_ridges2()
+p1 <- player_stats %>% drop_na(REB) %>% ggplot(aes(x = REB, y = Pos)) + geom_density_ridges2()+
+    labs(title = "Total Rebounds by Player Position",
+       x = "Total Rebounds",
+       y = "Player Position")
+p2 <- player_stats %>% drop_na(REB) %>% ggplot(aes(x = ST, y = Pos)) + geom_density_ridges2()+
+    labs(title = "Total Steals by Player Position",
+       x = "Total Steals",
+       y = "Player Position")
+p3 <- player_stats %>% drop_na(BLKS) %>% ggplot(aes(x = BLKS, y = Pos)) + geom_density_ridges2()+
+    labs(title = "Total Blocks by Player Position",
+       x = "Total Blocks",
+       y = "Player Position")
 grid.arrange(p1, p2, p3, nrow=3)
 ```
 
