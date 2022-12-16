@@ -1,3 +1,5 @@
 # Interactive component
 
+The graph below allows the user to observe the numerical statistics for the school selected. For example, clicking the "Columbia" button will render the values for the numerical statistics for Columbia's men's basketball team. We have also provided statistics for Kansas, a team within the Big 12 conference, so that the user can compare the statistics between two Ivy League schools and a flagship Big 12 basketball school. (Spoiler, Kansas is much better than us)
 
+Note: We spent a lot of time trying to show these visualizations in a spider / radar plot because we thought that would be much more engaging. Unfortunately, we were unable to make it work in our given time frame.

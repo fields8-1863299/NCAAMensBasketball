@@ -23,7 +23,7 @@
 <meta name="author" content="Samuel Fields, Rohan Poddar" />
 
 
-<meta name="date" content="2022-12-15" />
+<meta name="date" content="2022-12-16" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -52,13 +52,6 @@
 <link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
 <link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
 <script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
-<script src="libs/htmlwidgets-1.5.4/htmlwidgets.js"></script>
-<script src="libs/plotly-binding-4.10.1/plotly.js"></script>
-<script src="libs/typedarray-0.1/typedarray.min.js"></script>
-<link href="libs/crosstalk-1.2.0/css/crosstalk.min.css" rel="stylesheet" />
-<script src="libs/crosstalk-1.2.0/js/crosstalk.min.js"></script>
-<link href="libs/plotly-htmlwidgets-css-2.11.1/plotly-htmlwidgets.css" rel="stylesheet" />
-<script src="libs/plotly-main-2.11.1/plotly-latest.min.js"></script>
 
 
 
@@ -101,11 +94,16 @@
 </ul></li>
 <li class="chapter" data-level="4" data-path="results.html"><a href="results.html"><i class="fa fa-check"></i><b>4</b> Results</a>
 <ul>
-<li class="chapter" data-level="4.1" data-path="results.html"><a href="results.html#offensive-analysis"><i class="fa fa-check"></i><b>4.1</b> Offensive Analysis</a></li>
-<li class="chapter" data-level="4.2" data-path="results.html"><a href="results.html#defensive-aalysis"><i class="fa fa-check"></i><b>4.2</b> Defensive Aalysis</a>
+<li class="chapter" data-level="4.1" data-path="results.html"><a href="results.html#general-analysis"><i class="fa fa-check"></i><b>4.1</b> General Analysis</a></li>
+<li class="chapter" data-level="4.2" data-path="results.html"><a href="results.html#defensive-analysis"><i class="fa fa-check"></i><b>4.2</b> Defensive Analysis</a>
 <ul>
 <li class="chapter" data-level="4.2.1" data-path="results.html"><a href="results.html#player-defensive-analysis"><i class="fa fa-check"></i><b>4.2.1</b> Player Defensive Analysis</a></li>
 <li class="chapter" data-level="4.2.2" data-path="results.html"><a href="results.html#team-defensive-analysis"><i class="fa fa-check"></i><b>4.2.2</b> Team Defensive Analysis</a></li>
+</ul></li>
+<li class="chapter" data-level="4.3" data-path="results.html"><a href="results.html#offensive-analysis"><i class="fa fa-check"></i><b>4.3</b> Offensive Analysis</a>
+<ul>
+<li class="chapter" data-level="4.3.1" data-path="results.html"><a href="results.html#player-offensive-analysis"><i class="fa fa-check"></i><b>4.3.1</b> Player Offensive Analysis</a></li>
+<li class="chapter" data-level="4.3.2" data-path="results.html"><a href="results.html#team-offensive-analysis"><i class="fa fa-check"></i><b>4.3.2</b> Team Offensive Analysis</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="interactive-component.html"><a href="interactive-component.html"><i class="fa fa-check"></i><b>5</b> Interactive component</a></li>
@@ -131,162 +129,162 @@
             <section class="normal" id="section-">
 <div id="interactive-component" class="section level1 hasAnchor" number="5">
 <h1><span class="header-section-number">Chapter 5</span> Interactive component<a href="interactive-component.html#interactive-component" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>The graph below allows the user to observe the numerical statistics for the school selected. For example, clicking the “Columbia” button will render the values for the numerical statistics for Columbia’s men’s basketball team. We have also provided statistics for Kansas, a team within the Big 12 conference, so that the user can compare the statistics between two Ivy League schools and a flagship Big 12 basketball school. (Spoiler, Kansas is much better than us)</p>
+<p>Note: We spent a lot of time trying to show these visualizations in a spider / radar plot because we thought that would be much more engaging. Unfortunately, we were unable to make it work in our given time frame.</p>
 
+ <!-- Load d3.js -->
+ <script src="https://d3js.org/d3.v4.js"></script>
+
+ <!-- Add 2 buttons -->
+ <button onclick="update(data1)">Columbia</button>
+ <button onclick="update(data2)">Harvard</button>
+ <button onclick="update(data3)">Kansas</button>
+
+ <!-- Create a div where the graph will take place -->
+ <div id="my_dataviz"></div>
+
+ <script>
+
+   // create 2 data_set
+   var data1 = [
+   {group: 'W', value: 4.0},
+   {group: 'L', value: 22.0},
+   {group: 'BLKS', value: 53.0},
+   {group: 'Fouls', value: 434.0},
+   {group: 'FGM', value: 651.0},
+   {group: 'FGA', value: 1531.0},
+   {group: 'FG%', value: 42.5},
+   {group: 'FT', value: 252.0},
+   {group: 'FTA', value: 402.0},
+   {group: 'FT%', value: 62.7},
+   {group: 'REB', value: 917.0},
+   {group: 'PPG', value: 67.4},
+   {group: 'ST', value: 154.0},
+   {group: '3FG', value: 198.0},
+   {group: '3FGA', value: 556.0},
+   {group: '3FG%', value: 35.6},
+   {group: 'AST', value: 313.0},
+   {group: 'TO', value: 396.0}
+   ];
+   
+   var data2 = [
+   {group: 'W', value: 13.0},
+   {group: 'L', value: 13.0},
+   {group: 'BLKS', value: 64.0},
+   {group: 'Fouls', value: 409.0},
+   {group: 'FGM', value: 676.0},
+   {group: 'FGA', value: 1564.0},
+   {group: 'FG%', value: 43.2},
+   {group: 'FT', value: 285.0},
+   {group: 'FTA', value: 411.0},
+   {group: 'FT%', value: 69.3},
+   {group: 'REB', value: 900.0},
+   {group: 'PPG', value: 71.5},
+   {group: 'ST', value: 198.0},
+   {group: '3FG', value: 221.0},
+   {group: '3FGA', value: 670.0},
+   {group: '3FG%', value: 33.0},
+   {group: 'AST', value: 295.0},
+   {group: 'TO', value: 321.0}
+   ];
+
+   var data3 = [
+   {group: 'W', value: 34},
+   {group: 'L', value: 6},
+   {group: 'BLKS', value: 172},
+   {group: 'Fouls', value: 637},
+   {group: 'FGM', value: 1144},
+   {group: 'FGA', value: 2393},
+   {group: 'FG%', value: 47.8},
+   {group: 'FT', value: 555},
+   {group: 'FTA', value: 774},
+   {group: 'FT%', value: 71.7},
+   {group: 'REB', value: 1515},
+   {group: 'PPG', value: 78.2},
+   {group: 'ST', value: 251},
+   {group: '3FG', value: 286},
+   {group: '3FGA', value: 792},
+   {group: '3FG%', value: 36.1},
+   {group: 'AST', value: 613},
+   {group: 'TO', value: 484}
+   ];
+   
+   // set the dimensions and margins of the graph
+   var margin = {top: 30, right: 30, bottom: 70, left: 60},
+       width = 800 - margin.left - margin.right,
+       height = 500 - margin.top - margin.bottom;
+   
+   // append the svg object to the body of the page
+   var svg = d3.select("#my_dataviz")
+     .append("svg")
+       .attr("width", width + margin.left + margin.right)
+       .attr("height", height + margin.top + margin.bottom)
+     .append("g")
+       .attr("transform",
+             "translate(" + margin.left + "," + margin.top + ")");
+   
+   // X axis
+   var x = d3.scaleBand()
+     .range([ 0, width ])
+     .domain(data1.map(function(d) { return d.group; }))
+     .padding(0.2);
+   svg.append("g")
+     .attr("transform", "translate(0," + height + ")")
+     .call(d3.axisBottom(x))
+     .selectAll("text")  
+     .style("text-anchor", "end")
+     .attr("dx", "-.8em")
+     .attr("dy", ".15em")
+     .attr("transform", "rotate(-45)");
+
+     // Y axis label:
+     svg.append("text")
+       .attr("text-anchor", "end")
+       .attr("x", width)
+       .attr("y", height + margin.top + 40)
+       .text("Statistic");
+   
+   // Add Y axis
+   var y = d3.scaleLinear()
+     .domain([0, 2400])
+     .range([ height, 0]);
+   svg.append("g")
+     .attr("class", "myYaxis")
+     .call(d3.axisLeft(y));
+   
+     // Y axis label:
+   svg.append("text")
+       .attr("text-anchor", "end")
+       .attr("transform", "rotate(-90)")
+       .attr("y", -margin.left+20)
+       .attr("x", -margin.top)
+       .text("Value");
+   
+   // A function that create / update the plot for a given variable:
+   function update(data) {
+   
+     var u = svg.selectAll("rect")
+       .data(data)
+   
+     u
+       .enter()
+       .append("rect")
+       .merge(u)
+       .transition()
+       .duration(1000)
+         .attr("x", function(d) { return x(d.group); })
+         .attr("y", function(d) { return y(d.value); })
+         .attr("width", x.bandwidth())
+         .attr("height", function(d) { return height - y(d.value); })
+         .attr("fill", "#69b3a2")
+   }
+   
+   // Initialize the plot with the first dataset
+   update(data1)
+   
+   </script>
+   
 </div>
-
-<div class="chart-container"></div>
-            <!-- Load d3.js -->
-            <script src="https://d3js.org/d3.v4.js"></script>
-
-            <!-- Add 2 buttons -->
-            <button onclick="update(data1)">Columbia</button>
-            <button onclick="update(data2)">Harvard</button>
-            <button onclick="update(data3)">Kansas</button>
-
-            <!-- Create a div where the graph will take place -->
-            <div id="my_dataviz"></div>
-
-            <script>
-
-              // create 2 data_set
-              var data1 = [
-              {group: 'W', value: 4.0},
-              {group: 'L', value: 22.0},
-              {group: 'BLKS', value: 53.0},
-              {group: 'Fouls', value: 434.0},
-              {group: 'FGM', value: 651.0},
-              {group: 'FGA', value: 1531.0},
-              {group: 'FG%', value: 42.5},
-              {group: 'FT', value: 252.0},
-              {group: 'FTA', value: 402.0},
-              {group: 'FT%', value: 62.7},
-              {group: 'REB', value: 917.0},
-              {group: 'PPG', value: 67.4},
-              {group: 'ST', value: 154.0},
-              {group: '3FG', value: 198.0},
-              {group: '3FGA', value: 556.0},
-              {group: '3FG%', value: 35.6},
-              {group: 'AST', value: 313.0},
-              {group: 'TO', value: 396.0}
-              ];
-              
-              var data2 = [
-              {group: 'W', value: 13.0},
-              {group: 'L', value: 13.0},
-              {group: 'BLKS', value: 64.0},
-              {group: 'Fouls', value: 409.0},
-              {group: 'FGM', value: 676.0},
-              {group: 'FGA', value: 1564.0},
-              {group: 'FG%', value: 43.2},
-              {group: 'FT', value: 285.0},
-              {group: 'FTA', value: 411.0},
-              {group: 'FT%', value: 69.3},
-              {group: 'REB', value: 900.0},
-              {group: 'PPG', value: 71.5},
-              {group: 'ST', value: 198.0},
-              {group: '3FG', value: 221.0},
-              {group: '3FGA', value: 670.0},
-              {group: '3FG%', value: 33.0},
-              {group: 'AST', value: 295.0},
-              {group: 'TO', value: 321.0}
-              ];
-
-              var data3 = [
-              {group: 'W', value: 34},
-              {group: 'L', value: 6},
-              {group: 'BLKS', value: 172},
-              {group: 'Fouls', value: 637},
-              {group: 'FGM', value: 1144},
-              {group: 'FGA', value: 2393},
-              {group: 'FG%', value: 47.8},
-              {group: 'FT', value: 555},
-              {group: 'FTA', value: 774},
-              {group: 'FT%', value: 71.7},
-              {group: 'REB', value: 1515},
-              {group: 'PPG', value: 78.2},
-              {group: 'ST', value: 251},
-              {group: '3FG', value: 286},
-              {group: '3FGA', value: 792},
-              {group: '3FG%', value: 36.1},
-              {group: 'AST', value: 613},
-              {group: 'TO', value: 484}
-              ];
-              
-              // set the dimensions and margins of the graph
-              var margin = {top: 30, right: 30, bottom: 70, left: 60},
-                  width = 800 - margin.left - margin.right,
-                  height = 500 - margin.top - margin.bottom;
-              
-              // append the svg object to the body of the page
-              var svg = d3.select("#my_dataviz")
-                .append("svg")
-                  .attr("width", width + margin.left + margin.right)
-                  .attr("height", height + margin.top + margin.bottom)
-                .append("g")
-                  .attr("transform",
-                        "translate(" + margin.left + "," + margin.top + ")");
-              
-              // X axis
-              var x = d3.scaleBand()
-                .range([ 0, width ])
-                .domain(data1.map(function(d) { return d.group; }))
-                .padding(0.2);
-              svg.append("g")
-                .attr("transform", "translate(0," + height + ")")
-                .call(d3.axisBottom(x))
-                .selectAll("text")  
-                .style("text-anchor", "end")
-                .attr("dx", "-.8em")
-                .attr("dy", ".15em")
-                .attr("transform", "rotate(-45)");
-
-                // Y axis label:
-                svg.append("text")
-                  .attr("text-anchor", "end")
-                  .attr("x", width)
-                  .attr("y", height + margin.top + 40)
-                  .text("Statistic");
-              
-              // Add Y axis
-              var y = d3.scaleLinear()
-                .domain([0, 2400])
-                .range([ height, 0]);
-              svg.append("g")
-                .attr("class", "myYaxis")
-                .call(d3.axisLeft(y));
-              
-                // Y axis label:
-              svg.append("text")
-                  .attr("text-anchor", "end")
-                  .attr("transform", "rotate(-90)")
-                  .attr("y", -margin.left+20)
-                  .attr("x", -margin.top)
-                  .text("Value");
-              
-              // A function that create / update the plot for a given variable:
-              function update(data) {
-              
-                var u = svg.selectAll("rect")
-                  .data(data)
-              
-                u
-                  .enter()
-                  .append("rect")
-                  .merge(u)
-                  .transition()
-                  .duration(1000)
-                    .attr("x", function(d) { return x(d.group); })
-                    .attr("y", function(d) { return y(d.value); })
-                    .attr("width", x.bandwidth())
-                    .attr("height", function(d) { return height - y(d.value); })
-                    .attr("fill", "#69b3a2")
-              }
-              
-              // Initialize the plot with the first dataset
-              update(data1)
-              
-              </script>
-</script>
             </section>
 
           </div>
