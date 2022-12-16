@@ -1,29 +1,12 @@
 # Results
 
-# ```{r}
-# library(ggplot2)
-# library(dplyr)
-# library(tidyverse)
-# library(plotly) 
-# library(ggridges)
-# library(gridExtra)
-# library(plotly)
-# library(visdat)
-# library(naniar)
-# library(cowplot)
-# library(vcd)
-# library(grid)
-# 
-# player_stats <- read.csv(file = 'data/NCAA_Player_D1_Stats.csv')
-# team_stats <- read.csv(file = 'data/NCAA_Team_D1_Stats.csv')
-# ```
 
 ```{r}
-library(dplyr)
-library(tidyverse)
-library(ggridges)
-library(cowplot)
-library(plotly)
+# library(dplyr)
+# library(tidyverse)
+# library(ggridges)
+# library(cowplot)
+# library(plotly)
 
 player_stats <- read.csv(file = 'data/NCAA_Player_D1_Stats.csv')
 
