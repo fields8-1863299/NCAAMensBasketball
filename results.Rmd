@@ -1,9 +1,6 @@
 # Results
 
-```{r setup, include=FALSE}
-# this prevents package loading message from appearing in the rendered version of your problem set
-knitr::opts_chunk$set(warning = FALSE, message = FALSE)
-
+```{r}
 library(ggplot2)
 library(dplyr)
 library(tidyverse)
@@ -11,9 +8,14 @@ library(plotly)
 library(ggridges)
 library(gridExtra)
 library(plotly)
+library(visdat)
 library(naniar)
+library(cowplot)
 library(vcd)
 library(grid)
+
+player_stats <- read.csv(file = 'data/NCAA_Player_D1_Stats.csv')
+team_stats <- read.csv(file = 'data/NCAA_Team_D1_Stats.csv')
 ```
 
 ```{r}
@@ -41,6 +43,8 @@ player_stats$FGAPG <- player_stats$FGA / player_stats$G
 
 ## General Analysis
 
+We will first start with a general analysis of the distribution of our dataset.
+
 ```{r}
 conf <- team_stats %>% 
         select(Team,Conference) %>%
@@ -57,6 +61,8 @@ ggplot(conf, aes(x=nt, y=reorder(Conference,nt))) +
   theme_linedraw() +
   theme(axis.text = element_text(size = 7))
 ```
+
+We can first observe the uneven distribution of teams across the different regional conferences in the NCAA D1 Mens basketball league. For reference, a conference is a regional subdivision of the overall NCAA league, wherein multiple teams in similar regions will belong in the same conference. Teams will compete most often with other teams in their conference, but this is not always the case. Due to the history of NCAA D1 Mens basketball and how it affects player recruitment, some divisions are considered more competitive (for example the Big 12 conference) and others are considered less so (such as the Ivy League conference). This is something we will seek to quantify below.
 
 ```{r}
 conf_stats <- team_stats %>% 
@@ -82,6 +88,10 @@ ggplot(conf_stats2,
   theme(axis.text = element_text(size = 7), legend.position="bottom")
 ```
 
+In the graph above, we have displayed the average number of games Won, Lost, and Played by each team by conference. We have also sorted the conferences in this graph by the average number of games Won by each team by conference. Due to the nature of team playing schedules, where there is a fair amount of competition crossover by conference (meaning teams will play other teams outside their respective conferences), we would hypothesize that, if the conferences are not equal in skill level, because of this schedule crossover, conferences with higher skilled teams should have a higher average number of team wins than conferences with lower skilled teams. Observing the graph above, we can observe this hypothesis to be supported. The conference that is conventionally considered to be the most skilled, the Big 12, is definitively at the top of our graph, suggesting that teams belonging to the Big 12 conference have on average the most number of games won, and the Ivy League, a conventionally poorly skilled conference, sits near the bottom.
+
+Our next general analysis will focus on the general distribution of the player data by its categorical variables: player class level (Freshman, Sophomore, Junior, or Senior) and player position (Guard, Forward, or Center).
+
 ```{r}
 freq_count <- player_stats %>%
   group_by(Pos, Cl) %>%
@@ -89,13 +99,17 @@ freq_count <- player_stats %>%
 fig <- vcd::mosaic(Pos ~ Cl,data = freq_count, direction = c("v","h"))
 ```
 
+We can first observe that Guards (G) are represented the most in our player statistics data set and centers (C) are represented the least. Furthermore, Seniors (Sr.) are the most represented class level and Freshmen (Fr.) are the least represented.
+
+Since our player data is incomplete, we only had access to the top 350 ranked players per each player data statistic we downloaded rather than ever player, we can make no comment as to whether or not certain positions or class levels are over or under represented in our data set. Rather, we should keep this overall distribution in mind as we conduct our later analysis. 
+
 ## Defensive Analysis
 
 We defined "Defensive Statistics" to include Rebounds, Rebounds per Game, Steals, Steals per Game, Blocks, and Blocks per Game. However, since the total number of games played by each team / player is not consistent, this has the possible to skew total valued statistics in favor of teams / players that played a higher number of total games. For this reason, the majority of this analysis will focus on the "per Game" statistics since these are all normalized by the total number of games each team / player played.
 
 ### Player Defensive Analysis
 
-The Player Defensive Analysis focuses on the Players' defensive efficiency by their average time played, compared by their class level (Freshman, Sophomore, Junior, or Senior) and their Player Position(Guard, Forward, or Center). In particular, we focus our analysis on "efficient outliers" in each respective defensive category as well as overall trends in each category by class level or position.
+The Player Defensive Analysis focuses on the Players' defensive efficiency by their average time played, compared by their class level (Freshman, Sophomore, Junior, or Senior) and their Player Position (Guard, Forward, or Center). In particular, we focus our analysis on "efficient outliers" in each respective defensive category as well as overall trends in each category by class level or position.
 
 We will first observe the overall distribution of our data from the perspective of Player Class Level and Position.
 

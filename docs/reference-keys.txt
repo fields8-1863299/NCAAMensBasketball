@@ -17,3 +17,7 @@ player-defensive-analysis
 team-defensive-analysis
 interactive-component
 conclusion
+general-analysis
+defensive-analysis
+player-offensive-analysis
+team-offensive-analysis
