@@ -52,6 +52,13 @@
 <link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
 <link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
 <script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+<script src="libs/htmlwidgets-1.5.4/htmlwidgets.js"></script>
+<script src="libs/plotly-binding-4.10.1/plotly.js"></script>
+<script src="libs/typedarray-0.1/typedarray.min.js"></script>
+<link href="libs/crosstalk-1.2.0/css/crosstalk.min.css" rel="stylesheet" />
+<script src="libs/crosstalk-1.2.0/js/crosstalk.min.js"></script>
+<link href="libs/plotly-htmlwidgets-css-2.11.1/plotly-htmlwidgets.css" rel="stylesheet" />
+<script src="libs/plotly-main-2.11.1/plotly-latest.min.js"></script>
 
 
 
@@ -147,15 +154,15 @@
 <h2><span class="header-section-number">3.3</span> Missing value analysis<a href="data.html#missing-value-analysis" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <div id="team-statistics-dataset" class="section level3 hasAnchor" number="3.3.1">
 <h3><span class="header-section-number">3.3.1</span> Team Statistics Dataset<a href="data.html#team-statistics-dataset" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<p><img src="finalproj_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<p><img src="finalproj_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
 <p>We can observe from the plot above that we have no missing team statistics. This is due to uniformity in maintaining team stats across all teams in the division.</p>
 </div>
 <div id="player-statistics-dataset" class="section level3 hasAnchor" number="3.3.2">
 <h3><span class="header-section-number">3.3.2</span> Player Statistics Dataset<a href="data.html#player-statistics-dataset" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<p><img src="finalproj_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<p><img src="finalproj_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
 <p>We can observe from the plot above that the only complete features in this data set are the Player’s name (Player), Class level (Cl), Height (Ht), Basketball Position (Pos), Number of games played (G), and their school’s divisional conference (Division).</p>
 <p>Beyond this, we can then observe that the remaining data features are each, roughly, 76% missing. From this observation, we can infer that the top 350 individual players from each statistical list we pulled are mostly mutually exclusive. The majority of students do not rank in the top 350 players across more than one top 350 statistical list ranking that we collected. We can see this broken down in the following visualization.</p>
-<p><img src="finalproj_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<p><img src="finalproj_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
 <p>The visualization above depicts the count of the top 40 most frequent intersecting missing value features, with a max intersection of at most 10 missing features. These numbers were chosen for visualization quality.</p>
 <p>On the far left, we can observe that the most frequent intersection of missing values (with a max intersection of at most 10 features) is samples with both Free Throw Attempts (FTA), Free Throws Made (FT), Minutes Played (MP), Field Goals Attempted (FGA), Minutes Per Game(MPG), Turn Overs (TO), Assist to Turnover Ration (Ratio), Field Goals Made (FG), 3 Point Field Goal Percentage (X3FG), and Number of Triple Doubles (Trpl.Dbl).</p>
 <p>This set of intersecting missing values accounted for 635 samples with missing values. We can then observe a steep drop off for the rest of the intersecting missing value sets, but there is a persistent trend that the large majority of samples that contain a missing value contain a missing value across more than one, and even two, data features. This supports the hypothesis that the large majority of individual players do rank in top 350 players for multiple top 350 player statistic lists.</p>

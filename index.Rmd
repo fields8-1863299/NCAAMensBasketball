@@ -7,3 +7,6 @@ site: bookdown::bookdown_site
 
 # Introduction
 
+In this project, we intend to perform a general data visualization analysis of the 2021-2022 NCAA D1 Mens basketball league. We chose this topic because we are both fans of college basketball and are we interested in learning more behind the statistics of college basketball and the perspective it can provide us beyond casual fandom. For those unfamiliar with the sport, basketball is a 5 on 5 team sport that can commonly be broken down into the following manner. Each player has three possible positions he might be categorized under - guard, forward, or center. This categorization might be determined due to the player's skillset and / or natural features (ie height). The game can also be understood under two contexts, offense and defense, where offense refers to a teams effort to score (attain) points and defense refers to a teams effort to prevent the opposing team from scoring (attaining) points. Both offense and defense efforts can be understood by certain statistics which we will explore in our project.
+
+Topics were are interested in analyzing in this project include: how we might understand individual player's offensive and / or defensive efficiency in basketball? how might we understand a team's offensive and / or defensive efficiency and how might this relate to a teams ability to win basketball games?

@@ -35,7 +35,10 @@ library(plotly)
 library(ggridges)
 library(gridExtra)
 library(plotly)
+library(visdat)
 library(naniar)
+library(cowplot)
+
 
 player_stats <- read.csv(file = 'data/NCAA_Player_D1_Stats.csv')
 team_stats <- read.csv(file = 'data/NCAA_Team_D1_Stats.csv')
@@ -44,7 +47,7 @@ team_stats <- read.csv(file = 'data/NCAA_Team_D1_Stats.csv')
 ### Team Statistics Dataset
 
 ```{r}
-vis_miss(team_stats)
+visdat::vis_miss(team_stats)
 ```
 
 We can observe from the plot above that we have no missing team statistics. This is due to uniformity in maintaining team stats across all teams in the division.
@@ -52,7 +55,7 @@ We can observe from the plot above that we have no missing team statistics. This
 ### Player Statistics Dataset
 
 ```{r}
-vis_miss(player_stats)
+visdat::vis_miss(player_stats)
 ```
 
 We can observe from the plot above that the only complete features in this data set are the Player's name (Player), Class level (Cl), Height (Ht), Basketball Position (Pos), Number of games played (G), and their school's divisional conference (Division).

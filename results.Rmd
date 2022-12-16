@@ -1,20 +1,5 @@
 # Results
 
-```{r setup, include=FALSE}
-# this prevents package loading message from appearing in the rendered version of your problem set
-knitr::opts_chunk$set(warning = FALSE, message = FALSE)
-
-library(ggplot2)
-library(dplyr)
-library(tidyverse)
-library(plotly) 
-library(ggridges)
-library(gridExtra)
-library(plotly)
-library(naniar)
-player_stats <- read.csv(file = 'data/NCAA_Player_D1_Stats.csv')
-team_stats <- read.csv(file = "data/NCAA_Team_D1_Stats.csv")
-```
 
 ## Offensive Analysis
 
@@ -55,7 +40,8 @@ p6 <- player_stats %>% drop_na(RPG) %>% ggplot(aes(x = BKPG, y = Pos)) + geom_de
        y = "Player Position")
 
 
-grid.arrange(p1, p5, p3, p4, p2, p6, nrow=3, ncol=2)
+ridges <- plot_grid(p1, p5, p3, p4, p2, p6, ncol=2)
+ridges
 ```
 
 We can observe that the representation of the data when observed from the perspective of Player Class Level and Position resembles a right-skewed normal distribution. Some of the sub portions are also bi-modal or tri-modal. We can also observe that there are no "Center" Player Positions represented in the Steals per Game subsection of the dataset.

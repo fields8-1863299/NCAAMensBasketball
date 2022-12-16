@@ -1,2 +1,9 @@
 # Conclusion
 
+exploration, limitations, future directions, lessons learned
+
+In our project, we conducted an in-depth analysis of the NCAA D1 Mens college basketball league. Our analysis included an observation of both team and individual players basketball statistics and we sectioned our or analysis of teams and players from the perspective of offensive and defensive basketball statistics. From our analysis, we were able to conclude very insightful relationships between offensive and defensive statistics as it relates to player / team performances.
+
+Our work did have some limitations due to the nature of our data source. Per each individual player statistic, the NCAA Statistics website only provided the top 350 ranked players per the statistic requested as opposed to the every player in the league. Thus, our player data was very incomplete and did not allow for a comparison of individual players across different diverse statistics.
+
+In the future, we might imagine extending our analysis past just the scope of D1 Mens college basketball league to include Womens leagues and other divisions, like D2 or D3, which are also available from our data source as well. It would be very interesting to see if the trends we observed differ from those we might observe is these other leagues of interest, since this would suggest that the optimal play styles for each league differ and would allow for research into how they might differ.
