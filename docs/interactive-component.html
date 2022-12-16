@@ -136,9 +136,9 @@
  <script src="https://d3js.org/d3.v4.js"></script>
 
  <!-- Add 2 buttons -->
- <button onclick="update(data1)">Columbia</button>
- <button onclick="update(data2)">Harvard</button>
- <button onclick="update(data3)">Kansas</button>
+ <button onclick="update(data1, 'lightblue')">Columbia</button>
+ <button onclick="update(data2, 'maroon')">Harvard</button>
+ <button onclick="update(data3, 'green')">Kansas</button>
 
  <!-- Create a div where the graph will take place -->
  <div id="my_dataviz"></div>
@@ -261,7 +261,7 @@
        .text("Value");
    
    // A function that create / update the plot for a given variable:
-   function update(data) {
+   function update(data, color) {
    
      var u = svg.selectAll("rect")
        .data(data)
@@ -276,14 +276,14 @@
          .attr("y", function(d) { return y(d.value); })
          .attr("width", x.bandwidth())
          .attr("height", function(d) { return height - y(d.value); })
-         .attr("fill", "#69b3a2")
+         .style('fill', color)
    }
    
    // Initialize the plot with the first dataset
-   update(data1)
+   update(data1, 'lightblue')
    
    </script>
-   
+
 </div>
             </section>
 
