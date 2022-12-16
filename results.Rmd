@@ -1,9 +1,95 @@
 # Results
 
+```{r setup, include=FALSE}
+# this prevents package loading message from appearing in the rendered version of your problem set
+knitr::opts_chunk$set(warning = FALSE, message = FALSE)
 
-## Offensive Analysis
+library(ggplot2)
+library(dplyr)
+library(tidyverse)
+library(plotly) 
+library(ggridges)
+library(gridExtra)
+library(plotly)
+library(naniar)
+library(vcd)
+library(grid)
+```
 
-## Defensive Aalysis
+```{r}
+player_stats <- read.csv(file = 'data/NCAA_Player_D1_Stats.csv')
+team_stats <- read.csv(file = "data/NCAA_Team_D1_Stats.csv")
+
+team_stats$win_loss_ratio <- team_stats$W / team_stats$L
+team_stats$G <- team_stats$W + team_stats$L
+team_stats$win_ratio <- team_stats$W / team_stats$G
+
+team_stats$TOPG <- team_stats$TO / team_stats$G
+team_stats$ORebsG <- team_stats$ORebs / team_stats$G
+team_stats$FGMPG <- as.numeric(team_stats$FGM) / team_stats$G
+team_stats$X3FGPG <- team_stats$X3FG / team_stats$G
+
+team_stats$RPG <- as.numeric(team_stats$REB) / team_stats$G
+team_stats$STPG <- team_stats$ST / team_stats$G
+team_stats$BKPG <- team_stats$BLKS / team_stats$G
+team_stats$FPG <- team_stats$Fouls / team_stats$G
+
+player_stats$FGMPG <- player_stats$FGM / player_stats$G
+player_stats$FTPG <- player_stats$FT / player_stats$G
+player_stats$FGAPG <- player_stats$FGA / player_stats$G
+```
+
+## General Analysis
+
+```{r}
+conf <- team_stats %>% 
+        select(Team,Conference) %>%
+        group_by(Conference) %>%
+        summarise(
+          nt = n()
+        ) %>%
+        arrange(desc(nt))
+
+ggplot(conf, aes(x=nt, y=reorder(Conference,nt))) +
+  geom_point() +
+  xlab("Number of Teams") +
+  ylab("Conference") +
+  theme_linedraw() +
+  theme(axis.text = element_text(size = 7))
+```
+
+```{r}
+conf_stats <- team_stats %>% 
+        select(Team,Conference,GM,W,L) %>%
+        group_by(Conference) %>%
+        summarise(
+          Played = mean(GM),
+          Won = mean(W),
+          Lost = mean(L)
+        ) %>%
+        arrange(desc(Played))
+
+conf_stats2 <- conf_stats %>% pivot_longer(cols = c("Played", "Won", "Lost"),
+                              names_to = "Games", values_to = "n")
+
+ggplot(conf_stats2, 
+       aes(x=n, y=fct_reorder2(Conference, Games == 'Won', n, .desc=FALSE), 
+       color = Games)) +
+  geom_point() +
+  xlab("Average number of games") +
+  ylab("Conference") +
+  theme_linedraw() +
+  theme(axis.text = element_text(size = 7), legend.position="bottom")
+```
+
+```{r}
+freq_count <- player_stats %>%
+  group_by(Pos, Cl) %>%
+  summarize(Freq = n())
+fig <- vcd::mosaic(Pos ~ Cl,data = freq_count, direction = c("v","h"))
+```
+
+## Defensive Analysis
 
 We defined "Defensive Statistics" to include Rebounds, Rebounds per Game, Steals, Steals per Game, Blocks, and Blocks per Game. However, since the total number of games played by each team / player is not consistent, this has the possible to skew total valued statistics in favor of teams / players that played a higher number of total games. For this reason, the majority of this analysis will focus on the "per Game" statistics since these are all normalized by the total number of games each team / player played.
 
@@ -52,22 +138,25 @@ We will next analyze the players defensive efficiency by Class Level.
 p1 <- 
   plot_ly(player_stats, x = ~MPG, y = ~RPG, color=~Cl, text = ~paste("Player Name: ", Player))%>%
         layout(xaxis = list(title = 'Minutes Per Game'), 
-         yaxis = list(title = 'Rebounds Per Game'), title = 'Average Defensive Statistics by Player Class Level')
+         yaxis = list(title = 'Rebounds Per Game'), title = 'Average Defensive Statistics by Player Class Level')%>%
+        layout(yaxis = list(titlefont = list(size = 12)))
 p2 <- 
   plot_ly(player_stats, x = ~MPG, color=~Cl, text = ~paste("Player Name: ", Player))%>%
   add_markers(y = ~STPG, showlegend = F)%>%
         layout(xaxis = list(title = 'Minutes Per Game'), 
-         yaxis = list(title = 'Steals Per Game'))
+         yaxis = list(title = 'Steals Per Game'))%>%
+        layout(yaxis = list(titlefont = list(size = 12)))
 p3 <- 
   plot_ly(player_stats, x = ~MPG, color=~Cl, text = ~paste("Player Name: ", Player))%>%
   add_markers(y = ~BKPG, showlegend = F)%>%
         layout(xaxis = list(title = 'Minutes Per Game'), 
-         yaxis = list(title = 'Blocks Per Game'))
+         yaxis = list(title = 'Blocks Per Game')) %>%
+        layout(yaxis = list(titlefont = list(size = 12)))
 
-subplot(p1, p2, p3, nrows=2, titleY=TRUE, titleX=TRUE,shareX = TRUE, margin = 0.04)
+subplot(p1, p2, p3, nrows=3, titleY=TRUE, titleX=TRUE, shareX = TRUE, margin = 0.04)
 ```
 
-The players that we deem the most "efficient" should have a high defensive statistic per less average time played. Thus, those players who tend towards the top of each scatter plot (since the x-axis starts at 32 Minutes) would be deemed more "efficient." 
+The players that we deem the most "efficient" should have a high defensive statistic per less average time played. Thus, those players who tend towards the top of each scatter plot (since the x-axis starts at 32 Minutes) would be deemed more "efficient."
 
 Looking at the Rebounds per Game vs Minutes per Game plot, the obvious outliers that stand out are Fardaws Aimaq (Sophomore) at 10.59 Rebounds per Game and 34.3 Minutes per Game and Dillon Jones (Freshman) at 9.06 Rebounds per Game and 33.93 Minutes per Game. It is interesting to observe that both of these players are underclassmen despite the fact that the majority of the players in this plot (ie the top 350 ranked Rebounds per Game players) are Juniors or Seniors.
 
@@ -75,7 +164,7 @@ Looking at the Steals per Game vs Minutes per Game plot, the outliers that stand
 
 Looking at the Blocks per Game vs Minutes per Game plot, efficient players that stand out include E.J. Liddell (Junior) at 2.59 Blocks per game and 33.15 Minutes per Game and Zach Austin (Sophomore) at 2.16 Blocks per Game and 34.6 Minutes per Game.
 
-Across the outliers, there seems to be no apparent trend or pattern in an analysis by class level. However, when observing the overall participants of the graphs (ie the top ranked players per each defensive category) there does seem to be an over representation of upper classmen (Junior and Seniors) and an under representation of under classmen (Freshmen and Sophomores). 
+Across the outliers, there seems to be no apparent trend or pattern in an analysis by class level. However, when observing the overall participants of the graphs (ie the top ranked players per each defensive category) there does seem to be an over representation of upper classmen (Junior and Seniors) and an under representation of under classmen (Freshmen and Sophomores).
 
 In the second part of the Player Defensive Analysis, we perform a similar analysis, but instead of comparing across the players' class levels, we instead compare by the players' basketball position (G: Guard, F: Forward, and C: Center). The players' position is an important root of analysis because it tends to reflect how a player behaves in a team's overall strategy. On average, guards tend to be the faster, more agile players who handle the basketball and guard the quicker players. Centers tend to be the taller players who tend to stay near the basket to focus on rebounds or, when on defense, to prevent other players trying to score easy points close to the basket (aka block attempts). Forwards, on average, tend to be players that reside between the middle of a guard or center.
 
@@ -85,48 +174,39 @@ p1 <-
                                  "G" = "#d1495b",
                                  "F" = "#edae49"))%>%
         layout(xaxis = list(title = 'Minutes Per Game'), 
-         yaxis = list(title = 'Rebounds Per Game'), title = 'Average Defensive Statistics by Player Position')
+         yaxis = list(title = 'Rebounds Per Game'), title = 'Average Defensive Statistics by Player Position')%>%
+        layout(yaxis = list(titlefont = list(size = 12)))
+
 p2 <- 
   plot_ly(player_stats, x = ~MPG, color=~Pos, text = ~paste("Player Name: ", Player), colors = c("C" = "#00798c", 
                                  "G" = "#d1495b",
                                  "F" = "#edae49"))%>%
   add_markers(y = ~STPG, showlegend = F)%>%
         layout(xaxis = list(title = 'Minutes Per Game'), 
-         yaxis = list(title = 'Steals Per Game'))
+         yaxis = list(title = 'Steals Per Game'))%>%
+        layout(yaxis = list(titlefont = list(size = 12)))
+
 p3 <- 
   plot_ly(player_stats, x = ~MPG, color=~Pos, text = ~paste("Player Name: ", Player), colors = c("C" = "#00798c", 
                                  "G" = "#d1495b",
                                  "F" = "#edae49"))%>%
   add_markers(y = ~BKPG, showlegend = F)%>%
         layout(xaxis = list(title = 'Minutes Per Game'), 
-         yaxis = list(title = 'Blocks Per Game'))
+         yaxis = list(title = 'Blocks Per Game'))%>%
+        layout(yaxis = list(titlefont = list(size = 12)))
 
-subplot(p1, p2, p3, nrows=2, titleY=TRUE, titleX=TRUE,shareX = TRUE, margin = 0.04)
+subplot(p1, p2, p3, nrows=3, titleY=TRUE, titleX=TRUE,shareX = TRUE, margin = 0.04)
 ```
 
 We first observe that the most efficient rebounding and blocking players tend to be Centers or Forwards; the majority of players with more than 6 Rebounds per Game or more than 1 Block per Game fall into this category. However, we are very surprised by the representation of guards in these two graphs, as this represents that a large number of guards are represented in the top ranked players in these statistics, rather than it being all forwards or centers.
 
 Furthermore, we can observe that the majority of efficient Steal players are Guards; a large majority of players with more than 2 Steals per Game are Guards. It is also interesting to observe the non-representation of Centers in this graph. This does make sense, however, since in order to obtain a Steal, the player must be guarding the opposing player who has possession of the basketball and, since guards and forwards defend against the person with possession of the basketball the most frequently given their more agile attributes qualifying them for their position, this trend is quite easy to make sense of.
 
-
 ### Team Defensive Analysis
 
 The Team Defensive Analysis focuses on an analysis of the teams Steals or Blocks per Game in comparison to a teams "Win Ratio." A win ratio is defined as the number of wins a teams has normalized by the number of games a team played in the sport season. So a win ratio of 0.5 indicates that the team won half of the total games it played, or that is a a win-to-loss ratio of 1:1. For the purpose of our analysis, we define a "good" win ratio as being 0.5 or greater, and a "bad" win ratio as being less than 0.5.
 
 In these analyses, we will center on how a team's defensive efficiency, which in this case is determined by a comparison of a teams average defensive statistic compared to a teams average number of fouls, potentially relates to a team's win ratio. Team efficiency is defined in this manner because, often in basketball, effective defensive strategy involves hedging a line between defensive aggression. If a team plays not aggressive enough in the defensive category, they will likely not gain as many total team fouls but they will also not likely gain a defensive advantage. Inversely, if a team plays more aggressively defensibly, they will likely gain a defensive advantage in the game but they are more likely to accumulate a lot of team fouls. A large number of foul calls can be incredibly disadvantageous since it can lead to players being kicked out of the game (if a player has attained 5 personal fouls) and it can lead to free throw attempts for the opposing team (for each team foul accumulated after 6 total team fouls).
-
-```{r}
-team_stats$win_loss_ratio <- team_stats$W / team_stats$L
-team_stats$G <- team_stats$W + team_stats$L
-team_stats$win_ratio <- team_stats$W / team_stats$G
-
-
-team_stats$RPG <- as.numeric(team_stats$REB) / team_stats$G
-team_stats$STPG <- team_stats$ST / team_stats$G
-team_stats$BKPG <- team_stats$BLKS / team_stats$G
-team_stats$FPG <- team_stats$Fouls / team_stats$G
-```
-
 
 ```{r}
 p1 <- team_stats %>% drop_na(STPG)  %>% drop_na(FPG) %>% drop_na(win_ratio) %>%
@@ -137,7 +217,7 @@ p1 <- team_stats %>% drop_na(STPG)  %>% drop_na(FPG) %>% drop_na(win_ratio) %>%
 p1
 ```
 
-Observing this graph, we can discern a slight linear relationship between Steals per Game and Fouls per Game as it relates to a team's win ratio. Looking at teams with "efficient" steals per game (teams towards the upper left side of the graph), we can see that these teams are a lot more likely to have a "good" win ratio. Similarly, looking at teams with "inefficient" steals per game (teams towards the lower right side of the graph), we can see that these teams are a lot more likely to have a "bad" win ratio. It is important to note, however, that these observations hold strongest at the extremes and are quite convoluted outside that. 
+Observing this graph, we can discern a slight linear relationship between Steals per Game and Fouls per Game as it relates to a team's win ratio. Looking at teams with "efficient" steals per game (teams towards the upper left side of the graph), we can see that these teams are a lot more likely to have a "good" win ratio. Similarly, looking at teams with "inefficient" steals per game (teams towards the lower right side of the graph), we can see that these teams are a lot more likely to have a "bad" win ratio. It is important to note, however, that these observations hold strongest at the extremes and are quite convoluted outside that.
 
 ```{r}
 p2 <- team_stats %>% drop_na(BKPG)  %>% drop_na(FPG) %>% drop_na(win_ratio) %>%
@@ -149,9 +229,135 @@ p2
 
 ```
 
-
 Starting our analysis of the Blocks per Game vs Win Ratio colored by a team's win ratio, we can observe a very similar trend to the previous graph. When looking at the extremes, teams with "efficient" blocks per game, on average, have a "good" ratio and, inversely, teams with "inefficient" blocks per game tend to have a "bad" win ratio.
 
-Thus, in our analysis of defensive efficiency, it is very likely that efficient defensive ability by a basketball team has an impact on a teams success in the NCAA Mens D1 league. However, this holds true most strongly for teams with very efficient or very inefficient ability, as in this analysis not much can be determined for those that do not lie in these extremes.  
+Thus, in our analysis of defensive efficiency, it is very likely that efficient defensive ability by a basketball team has an impact on a teams success in the NCAA Mens D1 league. However, this holds true most strongly for teams with very efficient or very inefficient ability, as in this analysis not much can be determined for those that do not lie in these extremes.
+
+## Offensive Analysis
+
+### Player Offensive Analysis
+
+```{r}
+p1 <- player_stats %>% drop_na(APG) %>% ggplot(aes(x = APG, y = Cl)) + geom_density_ridges2()+
+    labs(title = "Assists per Game by Class Level",
+       x = "Assists per Game",
+       y = "Class Level")
+
+p2 <- player_stats %>% drop_na(X3PG) %>% ggplot(aes(x = X3PG, y = Cl)) + geom_density_ridges2()+
+    labs(title = "3-Pt Field Goals by Class Level",
+       x = "3-Pt Field Goals per Game",
+       y = "Class Level")
+
+p3 <- player_stats %>% drop_na(FTPG) %>% ggplot(aes(x = FTPG, y = Cl)) + geom_density_ridges2()+
+    labs(title = "Free Throws per Game by Class Level",
+       x = "Free Throws per Game",
+       y = "Class Level")
+
+p4 <- player_stats %>% drop_na(APG) %>% ggplot(aes(x = APG, y = Pos)) + geom_density_ridges2()+
+    labs(title = "Assists per Game by Player Position",
+       x = "Assists per Game",
+       y = "Player Position")
+
+p5 <- player_stats %>% drop_na(X3PG) %>% ggplot(aes(x = X3PG, y = Pos)) + geom_density_ridges2()+
+    labs(title = "3-Pt Field Goals by Player Position",
+       x = "3-Pt Field Goals",
+       y = "Player Position")
+
+p6 <- player_stats %>% drop_na(FTPG) %>% ggplot(aes(x = FTPG, y = Pos)) + geom_density_ridges2()+
+    labs(title = "Free Throws per Game by Player Position",
+       x = "Free Throws per Game",
+       y = "Player Position")
 
 
+grid.arrange(p1, p4, p2, p5, p3, p6, nrow=3, ncol=2)
+```
+
+```{r}
+p1 <- 
+  plot_ly(player_stats, x = ~MPG, y = ~FGMPG, color=~Cl, text = ~paste("Player Name: ", Player))%>%
+        layout(xaxis = list(title = 'Minutes Per Game'), 
+         yaxis = list(title = 'FG Made PG'), title = 'Average Offensive Statistics by Player Class Level')%>%
+        layout(yaxis = list(titlefont = list(size = 12)))
+p2 <- 
+  plot_ly(player_stats, x = ~MPG, color=~Cl, text = ~paste("Player Name: ", Player))%>%
+  add_markers(y = ~FGAPG, showlegend = F)%>%
+        layout(xaxis = list(title = 'Minutes Per Game'), 
+         yaxis = list(title = 'FG Attempted PG'))%>%
+        layout(yaxis = list(titlefont = list(size = 12)))
+p3 <- 
+  plot_ly(player_stats, x = ~MPG, color=~Cl, text = ~paste("Player Name: ", Player))%>%
+  add_markers(y = ~PPG, showlegend = F)%>%
+        layout(xaxis = list(title = 'Minutes Per Game'), 
+         yaxis = list(title = 'Points PG')) %>%
+        layout(yaxis = list(titlefont = list(size = 12)))
+
+subplot(p1, p2, p3, nrows=3, titleY=TRUE, titleX=TRUE, shareX = TRUE, margin = 0.04)
+```
+
+```{r}
+p1 <- 
+  plot_ly(player_stats, x = ~MPG, y = ~FGMPG, color=~Pos, text = ~paste("Player Name: ", Player), colors = c("C" = "#00798c", 
+                                 "G" = "#d1495b",
+                                 "F" = "#edae49"))%>%
+        layout(xaxis = list(title = 'Minutes Per Game'), 
+         yaxis = list(title = 'FG Made PG'), title = 'Average Offensive Statistics by Player Position')%>%
+        layout(yaxis = list(titlefont = list(size = 10)))
+
+p2 <- 
+  plot_ly(player_stats, x = ~MPG, color=~Pos, text = ~paste("Player Name: ", Player), colors = c("C" = "#00798c", 
+                                 "G" = "#d1495b",
+                                 "F" = "#edae49"))%>%
+  add_markers(y = ~FGAPG, showlegend = F)%>%
+        layout(xaxis = list(title = 'Minutes Per Game'), 
+         yaxis = list(title = 'FG Attempted PG'))%>%
+        layout(yaxis = list(titlefont = list(size = 10)))
+
+p3 <- 
+  plot_ly(player_stats, x = ~MPG, color=~Pos, text = ~paste("Player Name: ", Player), colors = c("C" = "#00798c", 
+                                 "G" = "#d1495b",
+                                 "F" = "#edae49"))%>%
+  add_markers(y = ~PPG, showlegend = F)%>%
+        layout(xaxis = list(title = 'Minutes Per Game'), 
+         yaxis = list(title = 'Points PG'))%>%
+        layout(yaxis = list(titlefont = list(size = 10)))
+
+subplot(p1, p2, p3, nrows=3, titleY=TRUE, titleX=TRUE,shareX = TRUE, margin = 0.04)
+```
+
+### Team Offensive Analysis
+
+The Team Offensive Analysis focuses on analyzing the teams' Field Goals conversion to their points per game, and also comparing it with the opposition team's conversion rate. We additionally add the "Win Ratio" to the backdrop. Further, we look at the number of Field Goals made per game against the number of 3-Pt Field Goals made per game to understand a team's playing style.
+
+```{r}
+p1 <- team_stats %>% drop_na(FG.)  %>% drop_na(PPG) %>% drop_na(win_ratio) %>%
+  plot_ly(x = ~FG., y = ~PPG, color = ~win_ratio, colors='PRGn', text = ~paste("Team Name: ", Team))%>%
+        layout(xaxis = list(title = '% of Field Goals Converted'), 
+         yaxis = list(title = 'Points Per Game'), title = 'Team Offensive Effiency by Win Ratio')
+
+p1
+```
+
+From the graph we can clearly see a strong linear relation between Percentage of Field Goals converted and the average number of points a team scores per game. While this is obvious at first, adding the additional statistic of win ratio to this visual splits it into 3 sections. First, teams with high conversion rate and Points per game who have high win ratios as well, these are the strongest teams offensively. Second are the teams on the other side, teams with low conversion rate and thereby low points per game with low win ratios. These are the weaker teams in the division. The third and perhaps the most interesting section in the one in the middle. The teams with a 41-46% conversion rate and an average points per game between 60 and 80 points. There is no clear trend in the win ratio for the teams that fall in this section, this could be due to the defensive strength of the team or the strength of the other teams in the conference. Teams in this section need further analysis.
+
+```{r}
+p2 <- team_stats %>% drop_na(FG.)  %>% drop_na(OPP.FG.) %>% drop_na(win_ratio) %>%
+  plot_ly(x = ~FG., y = ~OPP.FG., color = ~win_ratio, colors='PRGn', text = ~paste("Team Name: ", Team))%>%
+        layout(xaxis = list(title = '% of Field Goals Converted'), 
+         yaxis = list(title = '% of Field Goals Converted by the Opposition'),
+         title = 'Team Offensive Effiency vs Opposition by Win Ratio')
+
+p2
+```
+
+Plotting a teams Field Goal conversion percentage to their opposition separates the strong teams from the weak. It also highlights that teams with high offensive efficiency also have a high win ratio. Now, the analysis is similar to the previous part where the teams can be split into 3 sections. However, in this case the middle section would have fewer teams as there is more separation between the top and the bottom sections.
+
+```{r}
+p3 <- team_stats %>% drop_na(FGMPG)  %>% drop_na(X3FGPG) %>% drop_na(win_ratio) %>%
+  plot_ly(x = ~FGMPG, y = ~X3FGPG, color = ~win_ratio, colors='PRGn', text = ~paste("Team Name: ", Team))%>%
+        layout(xaxis = list(title = 'Field Goals Per Game'), 
+         yaxis = list(title = '3-Pt Field Goals Per Game'), title = 'Team Offensive Effiency by Win Ratio')
+
+p3
+```
+
+We have looked at teams' Field Goal conversion rates. Now, looking at the plot between the number of field goals per game and the number of 3-Pt field goals per game lends us insight into the playing style of teams. There are teams with a high number of field goals scored per game but low number of them being 3-Pt field goals. This could suggest that these teams tend to score from within the D or have poor 3-Pt conversion rates. Based on the graph, we can say that teams that have fewer number of field goals per game have fewer 3-Pt field goals per game as well. Since scoring a 3-Pt field goal requires more skill given the distance from the basket, one can assume the teams in this section that also have low win ratios are less skill-ful. For this reason, a team with low number of field goal per game would not have a high number of 3-Pt field goals and we can see this from the upper left corner of the plot.
