@@ -9,3 +9,12 @@ missing-value-analysis
 results
 interactive-component
 conclusion
+team-statistics
+individual-player-statistics
+team-statistics-dataset
+player-statistics-dataset
+section
+offensive-analysis
+defensive-aalysis
+player-defensive-analysis
+team-defensive-analysis

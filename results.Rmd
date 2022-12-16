@@ -16,6 +16,51 @@ player_stats <- read.csv(file = 'data/NCAA_Player_D1_Stats.csv')
 team_stats <- read.csv(file = "data/NCAA_Team_D1_Stats.csv")
 ```
 
+## Offensive Analysis
+
+## Defensive Aalysis
+
+We defined "Defensive Statistics" to include Rebounds, Rebounds per Game, Steals, Steals per Game, Blocks, and Blocks per Game. However, since the total number of games played by each team / player is not consistent, this has the possible to skew total valued statistics in favor of teams / players that played a higher number of total games. For this reason, the majority of this analysis will focus on the "per Game" statistics since these are all normalized by the total number of games each team / player played.
+
+### Player Defensive Analysis
+
+The Player Defensive Analysis focuses on the Players' defensive efficiency by their average time played, compared by their class level (Freshman, Sophomore, Junior, or Senior) and their Player Position(Guard, Forward, or Center). In particular, we focus our analysis on "efficient outliers" in each respective defensive category as well as overall trends in each category by class level or position.
+
+We will first observe the overall distribution of our data from the perspective of Player Class Level and Position.
+
+```{r}
+p1 <- player_stats %>% drop_na(RPG) %>% ggplot(aes(x = RPG, y = Cl)) + geom_density_ridges2()+
+    labs(title = "Rebounds per Game by Class Level",
+       x = "Rebounds per Game",
+       y = "Class Level")
+p2 <- player_stats %>% drop_na(RPG) %>% ggplot(aes(x = STPG, y = Cl)) + geom_density_ridges2()+
+    labs(title = "Steals per Game by Class Level",
+       x = "Steals per Game",
+       y = "Class Level")
+p3 <- player_stats %>% drop_na(RPG) %>% ggplot(aes(x = BKPG, y = Cl)) + geom_density_ridges2()+
+    labs(title = "Blocks per Game by Class Level",
+       x = "Blocks per Game",
+       y = "Class Level")
+p4 <- player_stats %>% drop_na(RPG) %>% ggplot(aes(x = RPG, y = Pos)) + geom_density_ridges2()+
+    labs(title = "Rebounds per Game by Player Position",
+       x = "Rebounds per Game",
+       y = "Player Position")
+p5 <- player_stats %>% drop_na(RPG) %>% ggplot(aes(x = STPG, y = Pos)) + geom_density_ridges2()+
+    labs(title = "Steals per Game by Player Position",
+       x = "Steals per Game",
+       y = "Player Position")
+p6 <- player_stats %>% drop_na(RPG) %>% ggplot(aes(x = BKPG, y = Pos)) + geom_density_ridges2()+
+    labs(title = "Blocks per Game by Player Position",
+       x = "Blocks per Game",
+       y = "Player Position")
+
+
+grid.arrange(p1, p5, p3, p4, p2, p6, nrow=3, ncol=2)
+```
+
+We can observe that the representation of the data when observed from the perspective of Player Class Level and Position resembles a right-skewed normal distribution. Some of the sub portions are also bi-modal or tri-modal. We can also observe that there are no "Center" Player Positions represented in the Steals per Game subsection of the dataset.
+
+We will next analyze the players defensive efficiency by Class Level.
 
 ```{r}
 p1 <- 
@@ -36,24 +81,53 @@ p3 <-
 subplot(p1, p2, p3, nrows=2, titleY=TRUE, titleX=TRUE,shareX = TRUE, margin = 0.04)
 ```
 
+The players that we deem the most "efficient" should have a high defensive statistic per less average time played. Thus, those players who tend towards the top of each scatter plot (since the x-axis starts at 32 Minutes) would be deemed more "efficient." 
+
+Looking at the Rebounds per Game vs Minutes per Game plot, the obvious outliers that stand out are Fardaws Aimaq (Sophomore) at 10.59 Rebounds per Game and 34.3 Minutes per Game and Dillon Jones (Freshman) at 9.06 Rebounds per Game and 33.93 Minutes per Game. It is interesting to observe that both of these players are underclassmen despite the fact that the majority of the players in this plot (ie the top 350 ranked Rebounds per Game players) are Juniors or Seniors.
+
+Looking at the Steals per Game vs Minutes per Game plot, the outliers that stand out the most are Nendah Tarke (Sophomore) at 2.94 Steals per Game per 34.1 Minutes per Game and Jacob Gilyard (Senior) at 2.92 steals per game and 38.6 Minutes per game.
+
+Looking at the Blocks per Game vs Minutes per Game plot, efficient players that stand out include E.J. Liddell (Junior) at 2.59 Blocks per game and 33.15 Minutes per Game and Zach Austin (Sophomore) at 2.16 Blocks per Game and 34.6 Minutes per Game.
+
+Across the outliers, there seems to be no apparent trend or pattern in an analysis by class level. However, when observing the overall participants of the graphs (ie the top ranked players per each defensive category) there does seem to be an over representation of upper classmen (Junior and Seniors) and an under representation of under classmen (Freshmen and Sophomores). 
+
+In the second part of the Player Defensive Analysis, we perform a similar analysis, but instead of comparing across the players' class levels, we instead compare by the players' basketball position (G: Guard, F: Forward, and C: Center). The players' position is an important root of analysis because it tends to reflect how a player behaves in a team's overall strategy. On average, guards tend to be the faster, more agile players who handle the basketball and guard the quicker players. Centers tend to be the taller players who tend to stay near the basket to focus on rebounds or, when on defense, to prevent other players trying to score easy points close to the basket (aka block attempts). Forwards, on average, tend to be players that reside between the middle of a guard or center.
+
 ```{r}
 p1 <- 
-  plot_ly(player_stats, x = ~MPG, y = ~RPG, color=~Pos, text = ~paste("Player Name: ", Player))%>%
+  plot_ly(player_stats, x = ~MPG, y = ~RPG, color=~Pos, text = ~paste("Player Name: ", Player), colors = c("C" = "#00798c", 
+                                 "G" = "#d1495b",
+                                 "F" = "#edae49"))%>%
         layout(xaxis = list(title = 'Minutes Per Game'), 
          yaxis = list(title = 'Rebounds Per Game'), title = 'Average Defensive Statistics by Player Position')
 p2 <- 
-  plot_ly(player_stats, x = ~MPG, color=~Pos, text = ~paste("Player Name: ", Player))%>%
+  plot_ly(player_stats, x = ~MPG, color=~Pos, text = ~paste("Player Name: ", Player), colors = c("C" = "#00798c", 
+                                 "G" = "#d1495b",
+                                 "F" = "#edae49"))%>%
   add_markers(y = ~STPG, showlegend = F)%>%
         layout(xaxis = list(title = 'Minutes Per Game'), 
          yaxis = list(title = 'Steals Per Game'))
 p3 <- 
-  plot_ly(player_stats, x = ~MPG, color=~Pos, text = ~paste("Player Name: ", Player))%>%
+  plot_ly(player_stats, x = ~MPG, color=~Pos, text = ~paste("Player Name: ", Player), colors = c("C" = "#00798c", 
+                                 "G" = "#d1495b",
+                                 "F" = "#edae49"))%>%
   add_markers(y = ~BKPG, showlegend = F)%>%
         layout(xaxis = list(title = 'Minutes Per Game'), 
          yaxis = list(title = 'Blocks Per Game'))
 
 subplot(p1, p2, p3, nrows=2, titleY=TRUE, titleX=TRUE,shareX = TRUE, margin = 0.04)
 ```
+
+We first observe that the most efficient rebounding and blocking players tend to be Centers or Forwards; the majority of players with more than 6 Rebounds per Game or more than 1 Block per Game fall into this category. However, we are very surprised by the representation of guards in these two graphs, as this represents that a large number of guards are represented in the top ranked players in these statistics, rather than it being all forwards or centers.
+
+Furthermore, we can observe that the majority of efficient Steal players are Guards; a large majority of players with more than 2 Steals per Game are Guards. It is also interesting to observe the non-representation of Centers in this graph. This does make sense, however, since in order to obtain a Steal, the player must be guarding the opposing player who has possession of the basketball and, since guards and forwards defend against the person with possession of the basketball the most frequently given their more agile attributes qualifying them for their position, this trend is quite easy to make sense of.
+
+
+### Team Defensive Analysis
+
+The Team Defensive Analysis focuses on an analysis of the teams Steals or Blocks per Game in comparison to a teams "Win Ratio." A win ratio is defined as the number of wins a teams has normalized by the number of games a team played in the sport season. So a win ratio of 0.5 indicates that the team won half of the total games it played, or that is a a win-to-loss ratio of 1:1. For the purpose of our analysis, we define a "good" win ratio as being 0.5 or greater, and a "bad" win ratio as being less than 0.5.
+
+In these analyses, we will center on how a team's defensive efficiency, which in this case is determined by a comparison of a teams average defensive statistic compared to a teams average number of fouls, potentially relates to a team's win ratio. Team efficiency is defined in this manner because, often in basketball, effective defensive strategy involves hedging a line between defensive aggression. If a team plays not aggressive enough in the defensive category, they will likely not gain as many total team fouls but they will also not likely gain a defensive advantage. Inversely, if a team plays more aggressively defensibly, they will likely gain a defensive advantage in the game but they are more likely to accumulate a lot of team fouls. A large number of foul calls can be incredibly disadvantageous since it can lead to players being kicked out of the game (if a player has attained 5 personal fouls) and it can lead to free throw attempts for the opposing team (for each team foul accumulated after 6 total team fouls).
 
 ```{r}
 team_stats$win_loss_ratio <- team_stats$W / team_stats$L
@@ -77,121 +151,21 @@ p1 <- team_stats %>% drop_na(STPG)  %>% drop_na(FPG) %>% drop_na(win_ratio) %>%
 p1
 ```
 
+Observing this graph, we can discern a slight linear relationship between Steals per Game and Fouls per Game as it relates to a team's win ratio. Looking at teams with "efficient" steals per game (teams towards the upper left side of the graph), we can see that these teams are a lot more likely to have a "good" win ratio. Similarly, looking at teams with "inefficient" steals per game (teams towards the lower right side of the graph), we can see that these teams are a lot more likely to have a "bad" win ratio. It is important to note, however, that these observations hold strongest at the extremes and are quite convoluted outside that. 
+
 ```{r}
 p2 <- team_stats %>% drop_na(BKPG)  %>% drop_na(FPG) %>% drop_na(win_ratio) %>%
-  plot_ly(x = ~FPG, color = ~win_ratio, colors='PRGn', text = ~paste("Team Name: ", Team))%>%
-        add_markers(y = ~BKPG, showlegend = F, showscale=F)%>%
+  plot_ly(x = ~FPG, y = ~BKPG, color = ~win_ratio, colors='PRGn', text = ~paste("Team Name: ", Team))%>%
         layout(xaxis = list(title = 'Fouls per Game'), 
-         yaxis = list(title = 'Blocks Per Game'))
+         yaxis = list(title = 'Blocks Per Game'), title = 'Team Defensive Effiency by Win Ratio')
 
 p2
 
 ```
 
-```{r}
 
-p2 <- 
-  ggplot(team_stats, aes(x = win_ratio, y = STPG)) +
-    geom_bin2d() +
-    labs(
-       x = "Win Ratio",
-       y = "Steals per Game")
+Starting our analysis of the Blocks per Game vs Win Ratio colored by a team's win ratio, we can observe a very similar trend to the previous graph. When looking at the extremes, teams with "efficient" blocks per game, on average, have a "good" ratio and, inversely, teams with "inefficient" blocks per game tend to have a "bad" win ratio.
 
-p2 <- ggplotly(p2)
-p3 <- 
-  ggplot(team_stats, aes(x = win_ratio, y = BKPG)) +
-    geom_bin2d() +
-    labs(
-       x = "Win Ratio",
-       y = "Blocks per Game")
-
-p3 <- ggplotly(p3)
-
-subplot(p2, p3, nrows=2, titleY=TRUE, titleX=TRUE,shareX = TRUE, margin = 0.04)
-```
-
-To preface this analysis, we will first define a "good" Win Ratio (total wins divided by total games) as being greater than 0.5, as this suggests that the team had more wins than losses. First starting our analysis with the Blocks per Game vs Win Ratio and the Steals per Game vs Win Ratio graphs, we can observe that the teams that had a "good" Win Ratio also had, on average, a higher Steals per Game and Blocks per Game statistic than the "bad" Win Ratio teams. However, from the other observation that this is not an absolute feature of the data (from example, some teams with less Steals per Game had a better Win Ratio than some teams with a higher number of Steals per Game), what we might conclude is that some teams place a large focus on defense as part of their overall basketball game strategy, reflected in the outliers on the top each graph for Blocks per Game and Steals per Game, and that these teams with that particular focus are, for the most part, able to find success with a "good" Win Ratio. However, seeing how the majority of teams with a "good" Win Ratio are not these "outlier" defensive teams, we can also conclude that a strong defensive strategy is not essential for a successful basketball team.
-
-```{r}
-p1 <- 
-  player_stats %>% drop_na(RPG) %>% mutate(gene = fct_relevel(Cl, 
-                            "Fr.", "So.", "Jr.", "Sr.")) %>% 
-  ggplot(aes(Cl, RPG)) + 
-  geom_boxplot(na.rm = TRUE) + theme(axis.text.x = element_text(angle = 45, vjust = 0.5, hjust=0.5))+
-    labs(
-       x = "Player Class",
-       y = "Rebounds per Game")
-
-p2 <- 
-  player_stats %>% drop_na(RPG) %>% mutate(gene = fct_relevel(Cl, 
-                            "Fr.", "So.", "Jr.", "Sr.")) %>% 
-  ggplot(aes(Cl, STPG)) + 
-  geom_boxplot(na.rm = TRUE) + theme(axis.text.x = element_text(angle = 45, vjust = 0.5, hjust=0.5))+
-    labs(
-       x = "Player Class",
-       y = "Steals per Game")
-
-p3 <- 
-  player_stats %>% drop_na(RPG) %>% mutate(gene = fct_relevel(Cl, 
-                            "Fr.", "So.", "Jr.", "Sr.")) %>% 
-  ggplot(aes(Cl, BKPG)) + 
-  geom_boxplot(na.rm = TRUE) + theme(axis.text.x = element_text(angle = 45, vjust = 0.5, hjust=0.5))+
-    labs(
-       x = "Player Class",
-       y = "Blocks per Game")
-
-grid.arrange(p1, p2, p3, ncol=3)
-```
-
-```{r}
-p1 <- 
-  player_stats %>% drop_na(RPG) %>%
-  ggplot(aes(reorder(Pos, -RPG, FUN=median, na.rm=TRUE), RPG)) + 
-  geom_boxplot(na.rm = TRUE) + theme(axis.text.x = element_text(angle = 45, vjust = 0.5, hjust=1))+
-    labs(
-       x = "Player Position",
-       y = "Rebounds Position")
-
-p2 <- 
-  player_stats %>% drop_na(RPG) %>%
-  ggplot(aes(reorder(Pos, -RPG, FUN=median, na.rm=TRUE), STPG)) + 
-  geom_boxplot(na.rm = TRUE) + theme(axis.text.x = element_text(angle = 45, vjust = 0.5, hjust=1))+
-    labs(
-       x = "Player Position",
-       y = "Steals Position")
-
-p3 <- 
-  player_stats %>% drop_na(RPG) %>%
-  ggplot(aes(reorder(Pos, -RPG, FUN=median, na.rm=TRUE), BKPG)) + 
-  geom_boxplot(na.rm = TRUE) + theme(axis.text.x = element_text(angle = 45, vjust = 0.5, hjust=1))+
-    labs(
-       x = "Player Position",
-       y = "Blocks Position")
-
-grid.arrange(p1, p2, p3, ncol=3)
-```
-
-```{r}
-p1 <- player_stats %>% drop_na(REB) %>% ggplot(aes(x = REB, y = Pos)) + geom_density_ridges2()+
-    labs(title = "Total Rebounds by Player Position",
-       x = "Total Rebounds",
-       y = "Player Position")
-p2 <- player_stats %>% drop_na(REB) %>% ggplot(aes(x = ST, y = Pos)) + geom_density_ridges2()+
-    labs(title = "Total Steals by Player Position",
-       x = "Total Steals",
-       y = "Player Position")
-p3 <- player_stats %>% drop_na(BLKS) %>% ggplot(aes(x = BLKS, y = Pos)) + geom_density_ridges2()+
-    labs(title = "Total Blocks by Player Position",
-       x = "Total Blocks",
-       y = "Player Position")
-grid.arrange(p1, p2, p3, nrow=3)
-```
+Thus, in our analysis of defensive efficiency, it is very likely that efficient defensive ability by a basketball team has an impact on a teams success in the NCAA Mens D1 league. However, this holds true most strongly for teams with very efficient or very inefficient ability, as in this analysis not much can be determined for those that do not lie in these extremes.  
 
 
-
-
-```{r}
-p <- ggplot(player_stats, aes(reorder(Division, -ST, FUN=median, na.rm=TRUE), ST)) + 
-  geom_boxplot(na.rm = TRUE) + theme(axis.text.x = element_text(angle = 45, vjust = 0.5, hjust=1))
-ggplotly(p)
-```

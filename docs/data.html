@@ -23,7 +23,7 @@
 <meta name="author" content="Samuel Fields, Rohan Poddar" />
 
 
-<meta name="date" content="2022-12-14" />
+<meta name="date" content="2022-12-15" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -80,11 +80,27 @@
 </ul></li>
 <li class="chapter" data-level="3" data-path="data.html"><a href="data.html"><i class="fa fa-check"></i><b>3</b> Data</a>
 <ul>
-<li class="chapter" data-level="3.1" data-path="data.html"><a href="data.html#sources"><i class="fa fa-check"></i><b>3.1</b> Sources</a></li>
-<li class="chapter" data-level="3.2" data-path="data.html"><a href="data.html#cleaning-transformation"><i class="fa fa-check"></i><b>3.2</b> Cleaning / transformation</a></li>
-<li class="chapter" data-level="3.3" data-path="data.html"><a href="data.html#missing-value-analysis"><i class="fa fa-check"></i><b>3.3</b> Missing value analysis</a></li>
+<li class="chapter" data-level="3.1" data-path="data.html"><a href="data.html#sources"><i class="fa fa-check"></i><b>3.1</b> Sources</a>
+<ul>
+<li class="chapter" data-level="3.1.1" data-path="data.html"><a href="data.html#team-statistics"><i class="fa fa-check"></i><b>3.1.1</b> Team statistics</a></li>
+<li class="chapter" data-level="3.1.2" data-path="data.html"><a href="data.html#individual-player-statistics"><i class="fa fa-check"></i><b>3.1.2</b> Individual Player Statistics</a></li>
 </ul></li>
-<li class="chapter" data-level="4" data-path="results.html"><a href="results.html"><i class="fa fa-check"></i><b>4</b> Results</a></li>
+<li class="chapter" data-level="3.2" data-path="data.html"><a href="data.html#cleaning-transformation"><i class="fa fa-check"></i><b>3.2</b> Cleaning &amp; Transformation</a></li>
+<li class="chapter" data-level="3.3" data-path="data.html"><a href="data.html#missing-value-analysis"><i class="fa fa-check"></i><b>3.3</b> Missing value analysis</a>
+<ul>
+<li class="chapter" data-level="3.3.1" data-path="data.html"><a href="data.html#team-statistics-dataset"><i class="fa fa-check"></i><b>3.3.1</b> Team Statistics Dataset</a></li>
+<li class="chapter" data-level="3.3.2" data-path="data.html"><a href="data.html#player-statistics-dataset"><i class="fa fa-check"></i><b>3.3.2</b> Player Statistics Dataset</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="results.html"><a href="results.html"><i class="fa fa-check"></i><b>4</b> Results</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="results.html"><a href="results.html#offensive-analysis"><i class="fa fa-check"></i><b>4.1</b> Offensive Analysis</a></li>
+<li class="chapter" data-level="4.2" data-path="results.html"><a href="results.html#defensive-aalysis"><i class="fa fa-check"></i><b>4.2</b> Defensive Aalysis</a>
+<ul>
+<li class="chapter" data-level="4.2.1" data-path="results.html"><a href="results.html#player-defensive-analysis"><i class="fa fa-check"></i><b>4.2.1</b> Player Defensive Analysis</a></li>
+<li class="chapter" data-level="4.2.2" data-path="results.html"><a href="results.html#team-defensive-analysis"><i class="fa fa-check"></i><b>4.2.2</b> Team Defensive Analysis</a></li>
+</ul></li>
+</ul></li>
 <li class="chapter" data-level="5" data-path="interactive-component.html"><a href="interactive-component.html"><i class="fa fa-check"></i><b>5</b> Interactive component</a></li>
 <li class="chapter" data-level="6" data-path="conclusion.html"><a href="conclusion.html"><i class="fa fa-check"></i><b>6</b> Conclusion</a></li>
 <li class="divider"></li>
@@ -110,21 +126,41 @@
 <h1><span class="header-section-number">Chapter 3</span> Data<a href="data.html#data" class="anchor-section" aria-label="Anchor link to header"></a></h1>
 <div id="sources" class="section level2 hasAnchor" number="3.1">
 <h2><span class="header-section-number">3.1</span> Sources<a href="data.html#sources" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>Our data was sourced from the NCAA Statistics National Ranking website (<a href="https://stats.ncaa.org/rankings" class="uri">https://stats.ncaa.org/rankings</a>). This website provides public access to statistics across a variety of NCAA sports and divisions. For our project, we focused on the statistics provided on individual players and teams belonging to the NCAA Division I Men’s basketball conference. The NCAA Statistics website provides a user interface that allows the user to select a statistic of interest, and then download the top ranked number of entities belonging to that selected list. For team statistics, every team was included for every statistic selected. However, for players each statistic was limited to the top 350 players belonging to a specific statistical ranking.</p>
-<p>For player statistics, in addition to the player statistic of interest, each top 350 player statistics list included columns on the player’s name (which also included information about their school’s regional conference), their class level (freshman, sophomore, etc), their height, their basketball position (Guard, Forward, or Center), and the number of games they played. The player statistics we collected from the website were 3-Point Field Goal Attempts, Assist Turnover Ratio, Assists per Game, Blocked Shots per Game, Defensive Rebounds per Game, Double Doubles, Field-Goal Percentage, Free-Throw Attempts, Free-Throws Made, Free-Throw Percentage, Minutes per Game, Offensive Rebounds per Game, Points per Game, Rebounds per Game, Steals per Game, Three-Point Field Goals per Game, Three-Point Field Goal Percentage, Total 3-Point Field Goals Made, Total Assists, Total Blocks, Total Field Goal Attempts, Total Field Goals Made, Total Minutes, Total Points, Total Rebounds, Total Steals, and Total Triple Doubles. In total, 27 player statistic lists were collected.</p>
+<p>Our data was sourced from the NCAA Statistics National Ranking website (<a href="https://stats.ncaa.org/rankings" class="uri">https://stats.ncaa.org/rankings</a>). This website provides public access to statistics across a variety of NCAA sports and divisions. The NCAA Statistics website provides a user interface that allows the user to select the statistic of interest, and download the data related to it.</p>
+<p>For our project, we focused on NCAA Division I Men’s basketball conference. We use two kinds of data - Team Statistics and Individual Player Statistics.</p>
+<div id="team-statistics" class="section level3 hasAnchor" number="3.1.1">
+<h3><span class="header-section-number">3.1.1</span> Team statistics<a href="data.html#team-statistics" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>The data is available for 350 of the 358 teams in the conference for the 2021-22 season. The 8 teams that do not feature in the data are the ones being transitioned from lower divisions to division I. The team statistics list includes columns on the school’s name (which also includes information about the school’s regional division), number of games played, number of games won and number of games lost.</p>
+<p>The team statistics we collected from the website were Blocks, Fouls, Field Goals Made, Field Goals Attempted, Field Goal Percentage, Opponent’s Field Goals Made, Opponent’s Field Goals Attempted, Opponent’s Field Goal Percentage, Free-throws, Free-throws attempted, Free-throw percentage, Total Rebounds, Offensive Rebounds, Defensive Rebounds, Opponent’s Rebounds, Rebound Margin, Points, Opponent’s Points, Scoring Margin, Points Per Game, Steals, Three-Point Field Goals Made, Three-Point Field Goals Attempted, Three-Point Field Goal Percentage, Opponent’s Three-Point Field Goals Made, Opponent’s Three-Point Field Goals Attempted, Assists, Turnovers, Opponent’s Turnovers. In total, we collected <strong>30 team statistics</strong>.</p>
+</div>
+<div id="individual-player-statistics" class="section level3 hasAnchor" number="3.1.2">
+<h3><span class="header-section-number">3.1.2</span> Individual Player Statistics<a href="data.html#individual-player-statistics" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>For the players, each statistic is limited to the top 350 players belonging to a specific statistical ranking. In addition to the player statistic of interest, each top 350 player statistics list includes columns on the player’s name (which also includes information about their school’s regional conference), their class level (freshman, sophomore, etc), their height, their basketball position (Guard, Forward, or Center), and the number of games they played.</p>
+<p>The player statistics we collected from the website were 3-Point Field Goal Attempts, Assist Turnover Ratio, Assists per Game, Blocked Shots per Game, Defensive Rebounds per Game, Double Doubles, Field-Goal Percentage, Free-Throw Attempts, Free-Throws Made, Free-Throw Percentage, Minutes per Game, Offensive Rebounds per Game, Points per Game, Rebounds per Game, Steals per Game, Three-Point Field Goals per Game, Three-Point Field Goal Percentage, Total Three-Point Field Goals Made, Total Assists, Total Blocks, Total Field Goal Attempts, Total Field Goals Made, Total Minutes, Total Points, Total Rebounds, Total Steals, and Total Triple Doubles. In total, we collected <strong>27 player statistics</strong>.</p>
+</div>
 </div>
 <div id="cleaning-transformation" class="section level2 hasAnchor" number="3.2">
-<h2><span class="header-section-number">3.2</span> Cleaning / transformation<a href="data.html#cleaning-transformation" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>For the player statistics, no cleaning was needed. However, the 27 lists were combined into 1 aggregate dataset by merging each list of the individual player information (player name, height, class level, position, and games played). Following this aggregation, another player feature, the player’s team’s regional division, was mined and added as a feature in the dataset.</p>
+<h2><span class="header-section-number">3.2</span> Cleaning &amp; Transformation<a href="data.html#cleaning-transformation" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>The different statistics for Team and Players were available in separate excel files that had to be combined into 1 master dataframe for Team Statistics and 1 for Individual Player Statistics. The individual player information (player name, height, class level, position, and games played) and team information (school name, games played, and win-loss ratio) were used to merge the different excel files since these fields were common to all. Following this, the team’s regional division was mined and added as a feature in the dataset for both the players and the teams.</p>
 </div>
 <div id="missing-value-analysis" class="section level2 hasAnchor" number="3.3">
 <h2><span class="header-section-number">3.3</span> Missing value analysis<a href="data.html#missing-value-analysis" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>We will first perform an analysis of the values missing from the individual player statistics dataset.</p>
+<div id="team-statistics-dataset" class="section level3 hasAnchor" number="3.3.1">
+<h3><span class="header-section-number">3.3.1</span> Team Statistics Dataset<a href="data.html#team-statistics-dataset" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p><img src="finalproj_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
-<p>We can observe from the plot above that the only complete features in this data set are the Player’s name (Player), their class level (Cl), their height (Ht), the basketball position (Pos), the number of games played (G), and their school’s divisional conference (Division). Beyond this, we can then observe that the remaining data features are each, roughly, 76% missing. From this observation, we can infer that the top 350 individual players from each statistical list we pulled are mostly mutually exclusive. The majority of students do not rank in the top 350 players across more than one top 350 statistical list ranking that we collected. We can see this broken down in the following visualization.</p>
+<p>We can observe from the plot above that we have no missing team statistics. This is due to uniformity in maintaining team stats across all teams in the division.</p>
+</div>
+<div id="player-statistics-dataset" class="section level3 hasAnchor" number="3.3.2">
+<h3><span class="header-section-number">3.3.2</span> Player Statistics Dataset<a href="data.html#player-statistics-dataset" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p><img src="finalproj_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
-<p>The visualization above depicts the count of the top 40 most frequent intersecting missing value features, with a max intersection of at most 10 missing features. These numbers were chosen for visualization quality. On the far left, we can observe that the most frequent intersection of missing values (with a max intersection of at most 10 features) is samples with both Free Throw Attempts (FTA), Free Throws Made (FT), Minutes Played (MP), Field Goals Attempted (FGA), Minutes Per Game(MPG), Turn Overs (TO), Assist to Turnover Ration (Ratio), Field Goals Made (FG), 3 Point Field Goal Percentage (X3FG), and Number of Triple Doubles (Trpl.Dbl). This set of intersecting missing values accounted for 635 samples with missing values. We can then observe a steep drop off for the rest of the intersecting missing value sets, but there is a persistent trend that the large majority of samples that contain a missing value contain a missing value across more than one, and even two, data features. This supports the hypothesis that the large majority of individual players do rank in top 350 players for multiple top 350 player statistic lists.</p>
+<p>We can observe from the plot above that the only complete features in this data set are the Player’s name (Player), Class level (Cl), Height (Ht), Basketball Position (Pos), Number of games played (G), and their school’s divisional conference (Division).</p>
+<p>Beyond this, we can then observe that the remaining data features are each, roughly, 76% missing. From this observation, we can infer that the top 350 individual players from each statistical list we pulled are mostly mutually exclusive. The majority of students do not rank in the top 350 players across more than one top 350 statistical list ranking that we collected. We can see this broken down in the following visualization.</p>
+<p><img src="finalproj_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<p>The visualization above depicts the count of the top 40 most frequent intersecting missing value features, with a max intersection of at most 10 missing features. These numbers were chosen for visualization quality.</p>
+<p>On the far left, we can observe that the most frequent intersection of missing values (with a max intersection of at most 10 features) is samples with both Free Throw Attempts (FTA), Free Throws Made (FT), Minutes Played (MP), Field Goals Attempted (FGA), Minutes Per Game(MPG), Turn Overs (TO), Assist to Turnover Ration (Ratio), Field Goals Made (FG), 3 Point Field Goal Percentage (X3FG), and Number of Triple Doubles (Trpl.Dbl).</p>
+<p>This set of intersecting missing values accounted for 635 samples with missing values. We can then observe a steep drop off for the rest of the intersecting missing value sets, but there is a persistent trend that the large majority of samples that contain a missing value contain a missing value across more than one, and even two, data features. This supports the hypothesis that the large majority of individual players do rank in top 350 players for multiple top 350 player statistic lists.</p>
 
+</div>
 </div>
 </div>
             </section>
