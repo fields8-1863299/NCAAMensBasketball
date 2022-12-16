@@ -249,7 +249,11 @@ Thus, in our analysis of defensive efficiency, it is very likely that efficient 
 
 ## Offensive Analysis
 
+We defined "Offensive Statistics" to include Assists per Game, 3-Pt Field Goals Made per Game, Free Throws Made per Game, Field Goals Made per Game, Field Goals Attempted per Game, Points per Game. We use the per Game statistic to normalize these statistics by the total number of games played by a player to avoid skewed values.
+
 ### Player Offensive Analysis
+
+The Player Defensive Analysis focuses on the Players' offensive statistics by average minutes played, compared by their class level (Freshman, Sophomore, Junior, or Senior) and their Player Position (Guard, Forward, or Center). In particular, we focus our analysis on "efficient outliers" in each respective offensive category as well as overall trends in each category by class level or position.
 
 ```{r}
 p1 <- player_stats %>% drop_na(APG) %>% ggplot(aes(x = APG, y = Cl)) + geom_density_ridges2()+
@@ -286,6 +290,8 @@ p6 <- player_stats %>% drop_na(FTPG) %>% ggplot(aes(x = FTPG, y = Pos)) + geom_d
 grid.arrange(p1, p4, p2, p5, p3, p6, nrow=3, ncol=2)
 ```
 
+We can observe that the representation of the data when observed from the perspective of Player Class Level and Position resembles a right-skewed normal distribution for Assists and 3-Pt Field Goals. Whereas the distribution for Free Throws per Game represents a normal distribution without a skew, which could be due to players generally having a similar skill level and make percentage when it comes to Free Throws. The other two stats are more in-game dependent with a smaller number of players being skilled in scoring 3-Pt Field Goals and making passes that lead to scoring opportunities. One interesting thing to note here is the slight bi-modality for freshmen. We can also observe that there are no "Center" Player Positions represented in the 3-Pt Field Goals per Game subsection of the dataset.
+
 ```{r}
 p1 <- 
   plot_ly(player_stats, x = ~MPG, y = ~FGMPG, color=~Cl, text = ~paste("Player Name: ", Player))%>%
@@ -307,6 +313,10 @@ p3 <-
 
 subplot(p1, p2, p3, nrows=3, titleY=TRUE, titleX=TRUE, shareX = TRUE, margin = 0.04)
 ```
+
+Looking at the scoring statistics per game by the Player Class Level, we can clearly see that the number of freshman is very low and the average minutes played per game is less than 34 minutes. Moreover, the players with the most number of minutes played per game are either Juniors or Seniors, which makes sense given their experience and seniority in the team.
+
+The players that we could consider outliers are almost always seniors. Players with high number of field goals made also have a high number of attempts and thereby also have a high number of points per game. Darius McGhee is the standout offensive player averaging 24.6 points per game with 18.33 field goals attempted per game. Given the average number of field goal made by Darius McGhee is 8.36, we can say that this player is scoring a high number of 3-Pt field goals. Another outlier is Peter Kiss, a senior averaging 25.2 points per game while also playing an average of 35.5 minutes per game. His 9.11 field goals made per game from an attempted 20 is more than Darius's but with more minutes played.
 
 ```{r}
 p1 <- 
@@ -337,6 +347,12 @@ p3 <-
 
 subplot(p1, p2, p3, nrows=3, titleY=TRUE, titleX=TRUE,shareX = TRUE, margin = 0.04)
 ```
+
+Now, looking at the scoring metrics from the the player position point of view, we can identify certain trends. There are only 3 centers that are a part of our offensive analysis. This makes sense because centers are usually the taller players that focus on defense and score primarily off of rebounds won.
+
+Guards tend to be the faster, more agile players, therefore they form a bulk of our offensive analysis. These players are focused on attack and scoring for the team. Forwards, tend to be players that reside between the middle of a guard or center so they help out in offense and defense. We can see these patterns in the visual above.
+
+Darius McGhee and Peter Kiss are the outliers in this analysis as well because we have only changed the categorization from Class Level to Player Position. Unsurprisingly, both of these players are Guards and so are the other outliers with high offensive statistics. Of the players in question, the highest number of minutes per game is played by players playing as Guards.
 
 ### Team Offensive Analysis
 
