@@ -1,3 +1,65 @@
+--- 
+title: "NCAA Mens Basketball"
+author: "Samuel Fields, Rohan Poddar"
+date: "`r Sys.Date()`"
+site: bookdown::bookdown_site
+---
+--- 
+title: "NCAA Mens Basketball"
+author: "Samuel Fields, Rohan Poddar"
+date: "`r Sys.Date()`"
+site: bookdown::bookdown_site
+---
+```{r include=FALSE, cache=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  message = FALSE,
+  warning = FALSE
+)
+```
+
+# Introduction
+
+In this project, we intend to perform a general data visualization analysis of the 2021-2022 NCAA D1 Mens basketball league. We chose this topic because we are both fans of college basketball and are we interested in learning more behind the statistics of college basketball and the perspective it can provide us beyond casual fandom. For those unfamiliar with the sport, basketball is a 5 on 5 team sport that can commonly be broken down into the following manner. Each player has three possible positions he might be categorized under - guard, forward, or center. This categorization might be determined due to the player's skillset and / or natural features (ie height). The game can also be understood under two contexts, offense and defense, where offense refers to a teams effort to score (attain) points and defense refers to a teams effort to prevent the opposing team from scoring (attaining) points. Both offense and defense efforts can be understood by certain statistics which we will explore in our project.
+
+Topics were are interested in analyzing in this project include: how we might understand individual player's offensive and / or defensive efficiency in basketball? how might we understand a team's offensive and / or defensive efficiency and how might this relate to a teams ability to win basketball games?
+
+<!--chapter:end:index.Rmd-->
+
+
+# Proposal
+
+Placeholder
+
+
+## Research topic
+## Data availability
+
+<!--chapter:end:proposal.Rmd-->
+
+
+# Data
+
+Placeholder
+
+
+## Sources
+### Team statistics
+### Individual Player Statistics
+## Cleaning & Transformation
+## Missing value analysis
+### Team Statistics Dataset
+### Player Statistics Dataset
+
+<!--chapter:end:data.Rmd-->
+
+```{r include=FALSE, cache=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  message = FALSE,
+  warning = FALSE
+)
+```
 # Results
 
 # ```{r}
@@ -398,3 +460,38 @@ p3
 ```
 
 We have looked at teams' Field Goal conversion rates. Now, looking at the plot between the number of field goals per game and the number of 3-Pt field goals per game lends us insight into the playing style of teams. There are teams with a high number of field goals scored per game but low number of them being 3-Pt field goals. This could suggest that these teams tend to score from within the D or have poor 3-Pt conversion rates. Based on the graph, we can say that teams that have fewer number of field goals per game have fewer 3-Pt field goals per game as well. Since scoring a 3-Pt field goal requires more skill given the distance from the basket, one can assume the teams in this section that also have low win ratios are less skill-ful. For this reason, a team with low number of field goal per game would not have a high number of 3-Pt field goals and we can see this from the upper left corner of the plot.
+
+<!--chapter:end:results.Rmd-->
+
+```{r include=FALSE, cache=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  message = FALSE,
+  warning = FALSE
+)
+```
+# Interactive component
+
+
+
+<!--chapter:end:interactive.Rmd-->
+
+```{r include=FALSE, cache=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  message = FALSE,
+  warning = FALSE
+)
+```
+# Conclusion
+
+exploration, limitations, future directions, lessons learned
+
+In our project, we conducted an in-depth analysis of the NCAA D1 Mens college basketball league. Our analysis included an observation of both team and individual players basketball statistics and we sectioned our or analysis of teams and players from the perspective of offensive and defensive basketball statistics. From our analysis, we were able to conclude very insightful relationships between offensive and defensive statistics as it relates to player / team performances.
+
+Our work did have some limitations due to the nature of our data source. Per each individual player statistic, the NCAA Statistics website only provided the top 350 ranked players per the statistic requested as opposed to the every player in the league. Thus, our player data was very incomplete and did not allow for a comparison of individual players across different diverse statistics.
+
+In the future, we might imagine extending our analysis past just the scope of D1 Mens college basketball league to include Womens leagues and other divisions, like D2 or D3, which are also available from our data source as well. It would be very interesting to see if the trends we observed differ from those we might observe is these other leagues of interest, since this would suggest that the optimal play styles for each league differ and would allow for research into how they might differ.
+
+<!--chapter:end:conclusion.Rmd-->
+
